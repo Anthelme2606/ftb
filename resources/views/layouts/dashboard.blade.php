@@ -344,11 +344,7 @@
         </div>
         @endif
       </div>
-      {{-- @if(isset($poules))
-      @foreach($poules as $poule)
-      {{dd($poule->teams)}}
-      @endforeach
-      @endif --}}
+    
       <div class="row row-cols-1 row-cols-md-3 g-1 w-100 ">
         @if(isset($poules))
         @foreach($poules as $poule)

@@ -44,7 +44,7 @@
                 <div class="team-logo">
                   <div class="round-50-team">
                     <?php if(isset($match->team1->image)): ?>
-                    <img src="<?php echo e(asset('assets/images/uploads/'.$match->team1->image ?? 'logo1.png')); ?>" class="img-fluid" alt="" />
+                    <img src="<?php echo e(asset('assets/images/uploads/'.$match->team1->image)); ?>" class="img-fluid" alt="" />
                   
                   <?php else: ?>
                   <img src="<?php echo e(asset('assets/images/logo1.png')); ?>" class="img-fluid" alt="" />
@@ -70,7 +70,7 @@
                 <div class="team-logo">
                   <div class="round-50-team">
                     <?php if(isset($match->team2->image)): ?>
-                    <img src="<?php echo e(asset('assets/images/uploads/'.$match->team2->image ?? 'logo1.png')); ?>" class="img-fluid" alt="" />
+                    <img src="<?php echo e(asset('assets/images/uploads/'.$match->team2->image)); ?>" class="img-fluid" alt="" />
                   
                   <?php else: ?>
                   <img src="<?php echo e(asset('assets/images/logo1.png')); ?>" class="img-fluid" alt="" />
@@ -90,44 +90,72 @@
           <div class="titre d-flex justify-content-center align-items-center">
             <h5 class="text-pretty text-center">Historique des matchs</h5>
           </div>
-          <?php if(isset($f_threes)): ?>
+          
+          <?php if(isset($stats)): ?>
           <div class="row row-cols-1 g-1 row-cols-md-3 ">
-         <?php $__currentLoopData = $f_threes; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $record): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-         <?php if(!empty($record->match)): ?>
+         <?php $__currentLoopData = $stats; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $match_p): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+         
             <div class="col match-list px-1">
               <div class="card  match-li">
                 <div class="card-header d-flex flex-column">
-                  <?php if($record->match->id===$match->id): ?>
+                  <?php if($match_p['match']['id']===$match->id): ?>
                   <div class="match-mt live">Live</div>
                   <?php else: ?>
-                  <div class="match-mt live"><?php echo e($record->match->date_heure); ?></div>
+                  <div class="match-mt live"><?php echo e($match_p['match']['date_heure']); ?></div>
 
                   <?php endif; ?>
                   <div class="teams d-flex">
                     <div class="team-s">
                       <div class="round-50-tea">
-                        <img src="<?php echo e(asset('assets/images/logo1.png')); ?>" class="img-fluid" alt="" />
+                        <?php if($match_p['team1']['image']): ?>
+                        <img src="<?php echo e(asset('assets/images/uploads/'. $match_p['team1']['image'])); ?>" class="img-fluid" alt="" />
+                       <?php else: ?>
+                       <img src="<?php echo e(asset('assets/images/uploads/logo1.png')); ?>" class="img-fluid" alt="" />
+                      
+                        <?php endif; ?>
                       </div>
                     </div>
+
                     <div class="team-s">
                       <div class="round-50-tea">
-                        <img src="<?php echo e(asset('assets/images/logo1.png')); ?>" class="img-fluid" alt="" />
+                        <?php if($match_p['team2']['image']): ?>
+                        <img src="<?php echo e(asset('assets/images/uploads/'. $match_p['team2']['image'])); ?>" class="img-fluid" alt="" />
+                       <?php else: ?>
+                       <img src="<?php echo e(asset('assets/images/uploads/logo1.png')); ?>" class="img-fluid" alt="" />
+                      
+                        <?php endif; ?>
                       </div>
                     </div>
                   </div>
                   <div class="where">Tournoi de maya kopé.</div>
                   <div class="vs-team d-flex flex-column">
+                    <?php if($match_p['team1']['winner']===1): ?>
                     <div class="winner d-flex justify-content-between">
-                      <span>Liverpool</span>
-                      <span class="score">3</span>
+                      <span><?php echo e($match_p['team1']['nom']); ?></span>
+                      <span class="score"><?php echo e($match_p['team1']['goals']); ?></span>
                     </div>
+                    <?php else: ?>
+                    <div class="winner d-flex justify-content-between">
+                      <span><?php echo e($match_p['team2']['nom']); ?></span>
+                      <span class="score"><?php echo e($match_p['team2']['goals']); ?></span>
+                    </div>
+
+                    <?php endif; ?>
+                    <?php if($match_p['team1']['winner']===0): ?>
                     <div class="loser d-flex justify-content-between">
-                      <span>Arsenal</span>
-                      <span class="score">2</span>
+                      <span><?php echo e($match_p['team1']['nom']); ?></span>
+                      <span class="score"><?php echo e($match_p['team1']['goals']); ?></span>
                     </div>
+                    <?php else: ?>
+                    <div class="loser d-flex justify-content-between">
+                      <span><?php echo e($match_p['team2']['nom']); ?></span>
+                      <span class="score"><?php echo e($match_p['team2']['goals']); ?></span>
+                    </div>
+
+                    <?php endif; ?>
                   </div>
                 </div>
-                <?php if($record->match->id===$match->id): ?>
+                <?php if($match_p['match']['id']===$match->id): ?>
                 <div class="card-body  fields  d-flex justify-content-center align-items-center flex-column">
                   <div id="teamH" class="teamH"></div>
                   <div id="teamA" class="py-2 teamA"></div>
@@ -135,7 +163,7 @@
                 <?php endif; ?>
               </div>
             </div>
-            <?php endif; ?>
+           
             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             
             
@@ -147,144 +175,47 @@
           <div
             class="row row-cols-3 row-cols-md-6 px-3 py-4 d-flex justify-content-center align-items-center"
           >
+          <?php if(isset($tops)): ?>
+          <?php $__currentLoopData = $tops; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $top): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
             <div
               class="col d-flex justify-content-center flex-column align-items-center"
             >
               <div
                 class="rounded text-black py-1 bg-white text-center d-flex justify-content-center align-items-center"
               >
-                <span class="px-2 soccer-player"> Kevin</span>
+                <span class="px-2 soccer-player"> <?php echo e($top->nom); ?> </span>
               </div>
   
               <div class="logo-container">
+                <?php if($top['image']): ?>
+                <div class="logo-player">
+                  <img src="<?php echo e(asset('assets/images/uploads/'.$top['image'])); ?>" class="img-fluid" alt="" />
+                </div>
+                <?php else: ?>
                 <div class="logo-player">
                   <img src="<?php echo e(asset('assets/images/player1.png')); ?>" class="img-fluid" alt="" />
                 </div>
+                <?php endif; ?>
                 <i class="mdi mdi-star"></i>
-                <div class="number">5</div>
+                <div class="number">
+                  <?php echo e($top['buts_marques']); ?>
+
+                </div>
                 <div class="active"></div>
               </div>
               <div
                 class="rounded text-black py-1 bg-white text-center d-flex justify-content-center align-items-center"
               >
-                <span class="px-2 bg-warning team-name-player"> Talent Fc</span>
+                <span class="px-2 bg-warning team-name-player"> 
+                  <?php echo e($top->team->nom); ?>
+
+                </span>
               </div>
             </div>
-            <div
-              class="col d-flex justify-content-center flex-column align-items-center"
-            >
-              <div
-                class="rounded text-black py-1 bg-white text-center d-flex justify-content-center align-items-center"
-              >
-                <span class="px-2 soccer-player"> Kevin</span>
-              </div>
-  
-              <div class="logo-container">
-                <div class="logo-player">
-                  <img src="<?php echo e(asset('assets/images/player1.png')); ?>" class="img-fluid" alt="" />
-                </div>
-                <i class="mdi mdi-star"></i>
-                <div class="number">5</div>
-                <div class="active"></div>
-              </div>
-              <div
-                class="rounded text-black py-1 bg-white text-center d-flex justify-content-center align-items-center"
-              >
-                <span class="px-2 bg-warning team-name-player"> Talent Fc</span>
-              </div>
-            </div>
-            <div
-              class="col d-flex justify-content-center flex-column align-items-center"
-            >
-              <div
-                class="rounded text-black py-1 bg-white text-center d-flex justify-content-center align-items-center"
-              >
-                <span class="px-2 soccer-player"> Kevin</span>
-              </div>
-  
-              <div class="logo-container">
-                <div class="logo-player">
-                  <img src="<?php echo e(asset('assets/images/player1.png')); ?>" class="img-fluid" alt="" />
-                </div>
-                <i class="mdi mdi-star"></i>
-                <div class="number">5</div>
-                <div class="active"></div>
-              </div>
-              <div
-                class="rounded text-black py-1 bg-white text-center d-flex justify-content-center align-items-center"
-              >
-                <span class="px-2 bg-warning team-name-player"> Talent Fc</span>
-              </div>
-            </div>
-            <div
-              class="col d-flex justify-content-center flex-column align-items-center"
-            >
-              <div
-                class="rounded text-black py-1 bg-white text-center d-flex justify-content-center align-items-center"
-              >
-                <span class="px-2 soccer-player"> Kevin</span>
-              </div>
-  
-              <div class="logo-container">
-                <div class="logo-player">
-                  <img src="<?php echo e(asset('assets/images/player1.png')); ?>" class="img-fluid" alt="" />
-                </div>
-                <i class="mdi mdi-star"></i>
-                <div class="number">5</div>
-                <div class="active"></div>
-              </div>
-              <div
-                class="rounded text-black py-1 bg-white text-center d-flex justify-content-center align-items-center"
-              >
-                <span class="px-2 bg-warning team-name-player"> Talent Fc</span>
-              </div>
-            </div>
-            <div
-              class="col d-flex justify-content-center flex-column align-items-center"
-            >
-              <div
-                class="rounded text-black py-1 bg-white text-center d-flex justify-content-center align-items-center"
-              >
-                <span class="px-2 soccer-player"> Kevin</span>
-              </div>
-  
-              <div class="logo-container">
-                <div class="logo-player">
-                  <img src="<?php echo e(asset('assets/images/player1.png')); ?>" class="img-fluid" alt="" />
-                </div>
-                <i class="mdi mdi-star"></i>
-                <div class="number">5</div>
-                <div class="active"></div>
-              </div>
-              <div
-                class="rounded text-black py-1 bg-white text-center d-flex justify-content-center align-items-center"
-              >
-                <span class="px-2 bg-warning team-name-player"> Talent Fc</span>
-              </div>
-            </div>
-            <div
-              class="col d-flex justify-content-center flex-column align-items-center"
-            >
-              <div
-                class="rounded text-black py-1 bg-white text-center d-flex justify-content-center align-items-center"
-              >
-                <span class="px-2 soccer-player"> Kossi Dosseh</span>
-              </div>
-  
-              <div class="logo-container">
-                <div class="logo-player">
-                  <img src="<?php echo e(asset('assets/images/player1.png')); ?>" class="img-fluid" alt="" />
-                </div>
-                <i class="mdi mdi-star"></i>
-                <div class="number">5</div>
-                <div class="active"></div>
-              </div>
-              <div
-                class="rounded text-black py-1 bg-white text-center d-flex justify-content-center align-items-center"
-              >
-                <span class="px-2 bg-warning team-name-player"> Talent Fc</span>
-              </div>
-            </div>
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+            <?php endif; ?>
+           
+              
           </div>
         </div>
         <?php if(isset($matches)): ?>
@@ -298,7 +229,7 @@
                   <div class="t-logo">
                     <div class="round-50-ps">
                       <?php if(isset($match_i->team1->image)): ?>
-                      <img src="<?php echo e(asset('assets/images/uploads/'.$match_i->team1->image ?? 'logo1.png')); ?>" class="img-fluid" alt="" />
+                      <img src="<?php echo e(asset('assets/images/uploads/'.$match_i->team1->image)); ?>" class="img-fluid" alt="" />
                     
                     <?php else: ?>
                     <img src="<?php echo e(asset('assets/images/logo1.png')); ?>" class="img-fluid" alt="" />
@@ -338,7 +269,7 @@
                   <div class="t-logo">
                     <div class="round-50-ps">
                       <?php if(isset($match_i->team2->image)): ?>
-                      <img src="<?php echo e(asset('assets/images/uploads/'.$match_i->team2->image ?? 'logo1.png')); ?>" class="img-fluid" alt="" />
+                      <img src="<?php echo e(asset('assets/images/uploads/'.$match_i->team2->image)); ?>" class="img-fluid" alt="" />
                     
                       <?php else: ?>
                     <img src="<?php echo e(asset('assets/images/logo1.png')); ?>" class="img-fluid" alt="" />
@@ -357,11 +288,15 @@
         </div>
         <?php endif; ?>
       </div>
+      
       <div class="row row-cols-1 row-cols-md-3 g-1 w-100 ">
+        <?php if(isset($poules)): ?>
+        <?php $__currentLoopData = $poules; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $poule): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+        <?php if(!empty($poule['teams']) && isset($poule['teams'])): ?>
         <div class="col mx-auto height-100">
             <div class="card">
                 <div class="card-header d-flex justify-content-center align-items-center">
-                    <h6>Poule A</h6>
+                    <h6><?php echo e($poule['poule']); ?></h6>
                 </div>
                 <div class="card-body d-flex justify-content-center align-items-center">
                     <div class="table-responsive">
@@ -384,8 +319,12 @@
                                 </tr>
                             </thead>
                             <tbody>
+                              <?php $__currentLoopData = $poule['teams']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key =>$value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <tr>
-                                  <td>1</td>
+                                  <td>
+                                    <?php echo e($key +1); ?>
+
+                                  </td>
                                     <td>
                                         <div class="round-1">
                                             <div class="round-2">
@@ -393,187 +332,56 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <td>Talent</td>
-                                    
-                                    <td>3</td>
-                                    <td>2</td>
-                                    <td>1</td>
-                                    <td>0</td>
-                                    <td>6</td>
-                                    <td>2</td>
-                                    <td>+4</td>
-                                    <td>7</td>
-                                </tr>
-                                <tr>
-                                  <td>2</td>
                                     <td>
-                                        <div class="round-1">
-                                            <div class="round-2">
-                                                <img class="img-fluid" src="<?php echo e(asset('assets/images/logo1.png')); ?>">
-                                            </div>
-                                        </div>
+                                      <?php echo e($value['nom']); ?>
+
                                     </td>
-                                    <td>Talent</td>
                                     
-                                    <td>3</td>
-                                    <td>1</td>
-                                    <td>1</td>
-                                    <td>1</td>
-                                    <td>5</td>
-                                    <td>3</td>
-                                    <td>+2</td>
-                                    <td>4</td>
+                                    <td>
+                                      <?php echo e($value['match_joues']); ?>
+
+                                    </td>
+                                    <td>
+                                      <?php echo e($value['victoires']); ?>
+
+                                    </td>
+                                    <td>
+                                      <?php echo e($value['nul']); ?>
+
+                                    </td>
+                                    <td>
+                                      <?php echo e($value['defaites']); ?>
+
+                                    </td>
+                                    <td>
+                                      <?php echo e($value['buts_marques']); ?>
+
+                                    </td>
+                                    <td>
+                                      <?php echo e($value['buts_encaissees']); ?>
+
+                                    </td>
+                                    <td>
+                                      <?php echo e($value['differences_buts']); ?>
+
+                                    </td>
+                                    <td>
+                                      <?php echo e($value['victoires']*3 +$value['nul']*1); ?>
+
+                                    </td>
                                 </tr>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col mx-auto height-100">
-            <div class="card">
-                <div class="card-header d-flex justify-content-center align-items-center">
-                    <h6>Poule B</h6>
-                </div>
-                <div class="card-body d-flex justify-content-center align-items-center">
-                    <div class="table-responsive">
-                        <table class="table table-bordered">
-                            <thead>
-                              <tr>
-                                <th></th>
-                                  <th class="mdi mdi-star-half-full"></th>
-                                  <th>Team</th>
-                                  
-                                  <th>MJ</th>
-                                  <th>V</th>
-                                  <th>N</th>
-                                  <th>D</th>
-                                  <th>BM</th>
-                                  <th>BE</th>
-                                  <th>DF</th>
-                                  <th>Pts</th>
-
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <tr>
-                                <td>1</td>
-                                  <td>
-                                      <div class="round-1">
-                                          <div class="round-2">
-                                              <img class="img-fluid" src="<?php echo e(asset('assets/images/logo1.png')); ?>">
-                                          </div>
-                                      </div>
-                                  </td>
-                                  <td>Talent</td>
-                                  
-                                  <td>3</td>
-                                  <td>2</td>
-                                  <td>1</td>
-                                  <td>0</td>
-                                  <td>6</td>
-                                  <td>2</td>
-                                  <td>+4</td>
-                                  <td>7</td>
-                              </tr>
-                              <tr>
-                                <td>2</td>
-                                  <td>
-                                      <div class="round-1">
-                                          <div class="round-2">
-                                              <img class="img-fluid" src="<?php echo e(asset('assets/images/logo1.png')); ?>">
-                                          </div>
-                                      </div>
-                                  </td>
-                                  <td>Talent</td>
-                                  
-                                  <td>3</td>
-                                  <td>1</td>
-                                  <td>1</td>
-                                  <td>1</td>
-                                  <td>5</td>
-                                  <td>3</td>
-                                  <td>+2</td>
-                                  <td>4</td>
-                              </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col mx-auto height-100">
-            <div class="card">
-                <div class="card-header d-flex justify-content-center align-items-center">
-                    <h6>Poule C</h6>
-                </div>
-                <div class="card-body d-flex justify-content-center align-items-center">
-                    <div class="table-responsive">
-                        <table class="table table-bordered">
-                            <thead>
-                              <tr>
-                                <th></th>
-                                  <th class="mdi mdi-star-half-full"></th>
-                                  <th>Team</th>
-                                  
-                                  <th>MJ</th>
-                                  <th>V</th>
-                                  <th>N</th>
-                                  <th>D</th>
-                                  <th>BM</th>
-                                  <th>BE</th>
-                                  <th>DF</th>
-                                  <th>Pts</th>
-
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <tr>
-                                <td>1</td>
-                                  <td>
-                                      <div class="round-1">
-                                          <div class="round-2">
-                                              <img class="img-fluid" src="<?php echo e(asset('assets/images/logo1.png')); ?>">
-                                          </div>
-                                      </div>
-                                  </td>
-                                  <td>Talent</td>
-                                  
-                                  <td>3</td>
-                                  <td>2</td>
-                                  <td>1</td>
-                                  <td>0</td>
-                                  <td>6</td>
-                                  <td>2</td>
-                                  <td>+4</td>
-                                  <td>7</td>
-                              </tr>
-                              <tr>
-                                <td>2</td>
-                                  <td>
-                                      <div class="round-1">
-                                          <div class="round-2">
-                                              <img class="img-fluid" src="<?php echo e(asset('assets/images/logo1.png')); ?>">
-                                          </div>
-                                      </div>
-                                  </td>
-                                  <td>Talent</td>
-                                  
-                                  <td>3</td>
-                                  <td>1</td>
-                                  <td>1</td>
-                                  <td>1</td>
-                                  <td>5</td>
-                                  <td>3</td>
-                                  <td>+2</td>
-                                  <td>4</td>
-                              </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <?php endif; ?>
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+        <?php endif; ?>
+       
     </div>
     
     </div>
