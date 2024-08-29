@@ -106,9 +106,12 @@ class TeamPlayerController
         $teams=$this->team_s->getAllTeams();
         $poules=$this->team_s->getPoules();
         $team_service=$this->team_s;
+       
         $records=$this->team_s->matchs();
-     // dd($this->team_s->opponents($teams,$this->team_s->teamById(11)));
-        return view('players-teams.creation', compact('teams','poules','team_service','records'));
+      
+        return view('players-teams.creation',
+         compact('teams','poules',
+        'team_service','records'));
     }
     public function add_t_p(Request $request){
         $request->validate([

@@ -112,10 +112,11 @@ function displayMatches(teamId) {
         <?php if($team->id): ?>
             // Vérifie si l'équipe correspond à l'équipe sélectionnée
             if (teamId == <?php echo e($team->id); ?>) {
-
+       
                 const opponents=<?php echo json_encode($team_service->opponents($teams, $team), 512) ?>;
-               
-                opponents.forEach((opponent,index)=>{
+                if(opponents){
+                //console.log(opponents);
+                Object.values(opponents).forEach(opponent => {
                     content += `
                     <div class="col">
                         <divid="<?php echo e($team->id); ?>" class="card position-relative card-checker" data-team-id="${opponent.match_id}">
@@ -133,7 +134,7 @@ function displayMatches(teamId) {
                                     <div class="vs mt-2 mb-1">VS</div>
                                     <div class="date-time">
                                         <div class="text-date">${opponent.date_match}</div>
-                                        <div>${opponent.heure_match}</div>
+                                        <div>${opponent.heure_match ? opponent.heure_match:'15:00'}</div>
                                     </div>
                                 </div>
                                 <div class="d-flex flex-column">
@@ -146,7 +147,8 @@ function displayMatches(teamId) {
                         </div>
                     </div>`;
 
-                })
+                });
+            }
                    
                   }
             

@@ -71,7 +71,7 @@
 <?php echo e($salutation); ?>
 
 <?php else: ?>
-<?php echo app('translator')->get('Regards'); ?>,<br>
+<?php echo app('translator')->get('Regards,'); ?><br>
 <?php echo e(config('app.name')); ?>
 
 <?php endif; ?>

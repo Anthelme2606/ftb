@@ -15,7 +15,11 @@ class HomeController extends Controller
     public function index(){
         $matches=$this->team->matchOrga();
         $match=$this->team->matchProche();
-        return view('layouts.dashboard',compact('match','matches'));
+        $f_threes=$this->team->getFirstThreeRecords();
+        $stats=$this->team->stats();
+        $tops=$this->team->topScorrers();
+        $poules=$this->team->poules_r();
+        return view('layouts.dashboard',compact('poules','tops','match','matches','f_threes','stats'));
     }
     public function upload(Request $request)
     {

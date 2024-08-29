@@ -93,9 +93,9 @@ class TeamService
         if($data){
             $data['premier_mi_temps']=$data['timer'];
             $data['heure_match']==$this->convertToDateTime($data['heure_match']);
-            if(!$this->isDateValid($data['date'])){
-                return redirect()->back()->with('error','La date du match doit etre superieur ou égale a la date actuelle');
-            }
+            // if(!$this->isDateValid($data['date'])){
+            //     return redirect()->back()->with('error','La date du match doit etre superieur ou égale a la date actuelle');
+            // }
             $versus=$this->teamRepository->versusByDate($data['date']);
               if($versus ){
                 if($versus->team1_id==$data['team1_id']|| $versus->team2_id==$data['team1_id'] ||$versus->team1_id==$data['team2_id'] || $versus->team2_id==$data['team2_id']){
@@ -399,6 +399,68 @@ public function isDateValid($date)
        return $this->teamRepository->records();
       
     }
+    public function getFirstThreeRecords(){
+      return  $this->teamRepository->getFirstThreeRecords();
+    }
+    public function stats()
+    {
+        $teams = [];
+        $records = $this->getFirstThreeRecords();
+    
+        foreach ($records as $record) {
+            $match = $record->match;
+            $team1 = $match->team1;
+            $team2 = $match->team2;
+    
+            $team_1_p = $this->teamRepository->ifPlay($match->id, $team1->id);
+            $team_2_p = $this->teamRepository->ifPlay($match->id, $team2->id);
+    
+            if (isset($team_1_p) && isset($team_2_p)) {
+                $stats1 = $this->getMatchStats($match->id, $team1->id);
+                $stats2 = $this->getMatchStats($match->id, $team2->id);
+    
+                if ($stats1['goals'] > $stats2['goals']) {
+                    $team1['winner'] = 1;
+                    $team2['winner'] = 0;
+                } else {
+                    $team1['winner'] = 0;
+                    $team2['winner'] = 1;
+                }
+    
+                // Adding stats to team1
+                $team1['goals'] = $stats1['goals'];
+                $team1['reds'] = $stats1['red_cards'];
+                $team1['yellows'] = $stats1['yellow_cards'];
+    
+                // Adding stats to team2
+                $team2['goals'] = $stats2['goals'];
+                $team2['reds'] = $stats2['red_cards'];
+                $team2['yellows'] = $stats2['yellow_cards'];
+    
+                // Adding both teams to the $teams array
+                $teams[] = [
+                    "team1" => $team1,
+                    "team2" => $team2,
+                    'match'=>$match,
+                ];
+            }
+        }
+    
+        return $teams;
+    }
+    public function poules_r(){
+        return $this->teamRepository->rankTeamsForAllPoules();
+    }
+    public function poules(){
+        return $this->teamRepository->poules();
+    }
+    public function topScorrers(){
+        return $this->teamRepository->getTopScoringPlayers();
+    }
+    
+    public function getMatchStats($matchid,$teamid){
+        return $this->teamRepository->getMatchStats($matchid,$teamid);
+    }
     public function matchs()
     {
         $teams = collect(); 
@@ -406,11 +468,11 @@ public function isDateValid($date)
     
         foreach ($records as $rc) {
             $match = $rc->match;
-            if ($match) { // Vérifier si $match n'est pas null
+            if ($match) { 
                 if ($match->team1) {
                     $team1 = $match->team1;
-                    $team1['match_id'] = $rc->match_id; // Ajouter match_id à l'équipe
-                    $teams->push($team1); // Ajouter l'équipe avec match_id à la collection
+                    $team1['match_id'] = $rc->match_id; 
+                    $teams->push($team1); 
                 }
                 if ($match->team2) {
                     $team2 = $match->team2;

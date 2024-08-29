@@ -15,7 +15,8 @@ class TeamController
     }
     public function index(){
         $teams=$this->teamService->getAllTeams();
-        return view('teams.list',compact('teams'));
+        $team_s=$this->teamService;
+        return view('teams.list',compact('teams','team_s'));
     }
 
 

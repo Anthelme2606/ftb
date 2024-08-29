@@ -18,10 +18,10 @@ class MatchRecordObserver
         $delay = Carbon::now()->addDay();
 
        
-        dispatch(function () use ($matchRecord) {
-            if ($matchRecord->created_at->isPast()) {
-                $matchRecord->delete();
-            }
-        })->delay($delay);
+        // dispatch(function () use ($matchRecord) {
+        //     if ($matchRecord->created_at->isPast()) {
+        //         $matchRecord->delete();
+        //     }
+        // })->delay($delay);
     }
 }

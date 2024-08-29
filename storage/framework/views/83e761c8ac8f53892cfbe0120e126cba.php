@@ -45,6 +45,10 @@
                     <label for="matchDate" class="form-label">Date du match</label>
                     <input type="date" id="matchDate" name="date" class="form-control" required>
                 </div>
+                <div class="mb-3">
+                    <label for="timeInput" class="form-label">heure du match</label>
+                    <input type="text" name="heure_match" id="timeInput" class="form-control time-input" placeholder="HH:MM" maxlength="5">
+                </div>
                 <div class="d-flex justify-content-center">
                     <button type="submit" class="btn but-primary " id="match-submit">
                         <span id="match-loader" class="spinner-border spin-l text-success spinner-border-sm d-none"></span>
@@ -80,6 +84,7 @@
 </div>
 <script src="<?php echo e(asset('assets/js/form.js')); ?>"></script>
 <script>
+
     document.getElementById('matchForm').addEventListener('submit', function(e) {
 e.preventDefault();
 
@@ -96,6 +101,34 @@ setTimeout(() => {
 this.submit(); 
 }, 800);
 });
+const timeInput = document.getElementById('timeInput');
+timeInput.addEventListener('keydown', function(e) {
+        // Autoriser uniquement les touches numériques, backspace, tab, et les touches directionnelles
+        const allowedKeys = ['Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
+        if (!e.key.match(/^[0-9]$/) && !allowedKeys.includes(e.key)) {
+            e.preventDefault();
+        }
+    });
+            timeInput.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/[^\d]/g, '');
+                
+                if (value.length > 4) {
+                    value = value.slice(0, 4);
+                }
+
+                if (value.length > 2) {
+                    value = value.slice(0, 2) + ':' + value.slice(2);
+                }
+
+                e.target.value = value;
+
+                // Déplacer le curseur après les deux points si on vient de les ajouter
+                if (value.length === 3) {
+                    setTimeout(() => {
+                        e.target.setSelectionRange(3, 3);
+                    }, 0);
+                }
+            });
 
     document.getElementById('matchForm').addEventListener('submit', function (e) {
         e.preventDefault();

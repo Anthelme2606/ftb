@@ -31,51 +31,78 @@
 
         <div class="col-md-9 colonne px-1">
           
+          <?php if(isset($match)): ?>
           <div class="card mb-1 current-match-live">
-            <div class="card-body team-a-vs-b">
-              <div class="team-1">
+            <div class="card-body team-a-vs-b 
+            d-flex align-items-center justify-content-between position-relative z-1">
+              <?php if(isset($match->team1)): ?>
+            <div class="team-1">
                 <div class="team-name">
-                  <div class="t-name">Liverpool</div>
-                  <div class="t-point">20 points</div>
+                  <div class="t-name"><?php echo e($match->team1->nom); ?></div>
+                  <div class="t-point"><?php echo e($match->team1->defaites*1 + $match->team1->victoires*3); ?> point(s)</div>
                 </div>
                 <div class="team-logo">
                   <div class="round-50-team">
-                    <img src="<?php echo e(asset('assets/images/logo1.png')); ?>" alt="image" class="img-fluid" />
+                    <?php if(isset($match->team1->image)): ?>
+                    <img src="<?php echo e(asset('assets/images/uploads/'.$match->team1->image ?? 'logo1.png')); ?>" class="img-fluid" alt="" />
+                  
+                  <?php else: ?>
+                  <img src="<?php echo e(asset('assets/images/logo1.png')); ?>" class="img-fluid" alt="" />
+                  
+                  <?php endif; ?>
                   </div>
                 </div>
               </div>
+              <?php endif; ?>
               <div class="versus-time position-relative">
                 <div class="match-ps">
-                  <span>D.Final</span>
+                  <span>Vs</span>
                 </div>
                 <div class="match-time">
-                  <span class="fw-bold">12:00</span>
+                  <span class="fw-bold"><?php echo e($match->heure_match ?? '15:00'); ?></span>
                 </div>
                 <div class="match-date">
-                  <span>Aujourd'hui</span>
+                  <span><?php echo e($match->date_match  ?? 'Date à venir'); ?></span>
                 </div>
               </div>
+              <?php if(isset($match->team2)): ?>
               <div class="team-2">
                 <div class="team-logo">
                   <div class="round-50-team">
-                    <img src="<?php echo e(asset('assets/images/logo1.png')); ?>" alt="image" class="img-fluid" />
-                  </div>
+                    <?php if(isset($match->team2->image)): ?>
+                    <img src="<?php echo e(asset('assets/images/uploads/'.$match->team2->image ?? 'logo1.png')); ?>" class="img-fluid" alt="" />
+                  
+                  <?php else: ?>
+                  <img src="<?php echo e(asset('assets/images/logo1.png')); ?>" class="img-fluid" alt="" />
+                  
+                  <?php endif; ?> 
+                </div>
                 </div>
                 <div class="team-name">
-                  <div class="t-name">Arsenal</div>
-                  <div class="t-point">22 points</div>
+                  <div class="t-name"><?php echo e($match->team2->nom); ?></div>
+                  <div class="t-point"><?php echo e($match->team2->defaites*1 + $match->team2->victoires*3); ?> point(s)</div>
                 </div>
               </div>
+              <?php endif; ?>
             </div>
           </div>
+          <?php endif; ?>
           <div class="titre d-flex justify-content-center align-items-center">
             <h5 class="text-pretty text-center">Historique des matchs</h5>
           </div>
+          <?php if(isset($f_threes)): ?>
           <div class="row row-cols-1 g-1 row-cols-md-3 ">
+         <?php $__currentLoopData = $f_threes; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $record): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+         <?php if(!empty($record->match)): ?>
             <div class="col match-list px-1">
               <div class="card  match-li">
                 <div class="card-header d-flex flex-column">
+                  <?php if($record->match->id===$match->id): ?>
                   <div class="match-mt live">Live</div>
+                  <?php else: ?>
+                  <div class="match-mt live"><?php echo e($record->match->date_heure); ?></div>
+
+                  <?php endif; ?>
                   <div class="teams d-flex">
                     <div class="team-s">
                       <div class="round-50-tea">
@@ -100,90 +127,20 @@
                     </div>
                   </div>
                 </div>
+                <?php if($record->match->id===$match->id): ?>
                 <div class="card-body  fields  d-flex justify-content-center align-items-center flex-column">
                   <div id="teamH" class="teamH"></div>
                   <div id="teamA" class="py-2 teamA"></div>
                 </div>
+                <?php endif; ?>
               </div>
             </div>
+            <?php endif; ?>
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             
-            <div class="col match-list">
-              <div class="card match-li">
-                  <div class="card-header d-flex flex-column">
-                      <div class="match-mt finished">Terminé</div>
-                      <div class="teams d-flex">
-                          <div class="team-s">
-                              <div class="round-50-tea">
-                                  <img src="<?php echo e(asset('assets/images/logo1.png')); ?>" class="img-fluid" alt="" />
-                              </div>
-                          </div>
-                          <div class="team-s">
-                              <div class="round-50-tea">
-                                  <img src="<?php echo e(asset('assets/images/logo1.png')); ?>" class="img-fluid" alt="" />
-                              </div>
-                          </div>
-                      </div>
-                      <div class="where">Tournoi de maya kopé.</div>
-                      <div class="vs-team d-flex flex-column">
-                          <div class="winner d-flex justify-content-between">
-                              <span>Liverpool</span>
-                              <span class="score">3</span>
-                          </div>
-                          <div class="loser d-flex justify-content-between">
-                              <span>Arsenal</span>
-                              <span class="score">2</span>
-                          </div>
-                      </div>
-                  </div>
-                  <div class="card-body  d-flex flex-column justify-content-center align-items-center">
-                      <div class="rounded-team-image">
-                          <img src="<?php echo e(asset('assets/images/team.png')); ?>" class="img-fluid" alt="" />
-                      </div>
-                      <div class="rounded-team-image">
-                          <img src="<?php echo e(asset('assets/images/team.png')); ?>" class="img-fluid" alt="" />
-                      </div>
-                  </div>
-              </div>
+            
           </div>
-          <div class="col match-list">
-              <div class="card match-li">
-                  <div class="card-header d-flex flex-column">
-                      <div class="match-mt finished">Terminé</div>
-                      <div class="teams d-flex">
-                          <div class="team-s">
-                              <div class="round-50-tea">
-                                  <img src="<?php echo e(asset('assets/images/logo1.png')); ?>" class="img-fluid" alt="" />
-                              </div>
-                          </div>
-                          <div class="team-s">
-                              <div class="round-50-tea">
-                                  <img src="<?php echo e(asset('assets/images/logo1.png')); ?>" class="img-fluid" alt="" />
-                              </div>
-                          </div>
-                      </div>
-                      <div class="where">Tournoi de maya kopé.</div>
-                      <div class="vs-team d-flex flex-column">
-                          <div class="winner d-flex justify-content-between">
-                              <span>Liverpool</span>
-                              <span class="score">3</span>
-                          </div>
-                          <div class="loser d-flex justify-content-between">
-                              <span>Arsenal</span>
-                              <span class="score">2</span>
-                          </div>
-                      </div>
-                  </div>
-                  <div class="card-body  d-flex flex-column justify-content-center align-items-center w-100">
-                      <div class="rounded-team-image">
-                          <img src="<?php echo e(asset('assets/images/team.png')); ?>" class="img-fluid" alt="" />
-                      </div>
-                      <div class="rounded-team-image">
-                          <img src="<?php echo e(asset('assets/images/team.png')); ?>" class="img-fluid" alt="" />
-                      </div>
-                  </div>
-              </div>
-          </div>
-          </div>
+          <?php endif; ?>
           <div class="titre d-flex justify-content-center align-items-center">
             <h5 class="text-pretty text-center">Les 6 meilleurs buteurs</h5>
           </div>
@@ -330,218 +287,75 @@
             </div>
           </div>
         </div>
+        <?php if(isset($matches)): ?>
         <div class="col-md-3 colonne">
+          <?php $__currentLoopData = $matches; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $match_i): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
           <div class="card mb-1">
             <div class="card-body team-a-vs-b">
+              <?php if(isset($match_i->team1)): ?>
               <div class="team-1">
                 <div class="team-name">
                   <div class="t-logo">
                     <div class="round-50-ps">
-                      <img src="<?php echo e(asset('assets/images/logo1.png')); ?>" class="img-fluid" alt="" />
-                    </div>
+                      <?php if(isset($match_i->team1->image)): ?>
+                      <img src="<?php echo e(asset('assets/images/uploads/'.$match_i->team1->image ?? 'logo1.png')); ?>" class="img-fluid" alt="" />
+                    
+                    <?php else: ?>
+                    <img src="<?php echo e(asset('assets/images/logo1.png')); ?>" class="img-fluid" alt="" />
+                    
+                    <?php endif; ?>
                   </div>
-                  <div class="t-pseudo">LVP</div>
+                  </div>
+                  <div class="t-pseudo"><?php echo e($match_i->team1->pseudo); ?></div>
                 </div>
               </div>
+              <?php endif; ?>
               <div class="versus-time position-relative">
                 <div class="match-live">
-                  <span class="timer">Live</span>
+                  <span class="timer">
+                    <?php if($match->id===$match_i->id): ?>
+                    Live
+                    <?php else: ?>
+                    <?php echo e($match_i->date_match ?? 'Date à venir'); ?>
+
+                    <?php endif; ?>
+                  </span>
                 </div>
                 <div class="match-score">
-                  <span class="fw-bold">3:2</span>
+                  <span class="fw-bold">
+                   <?php echo e($match_i->heure_match ?? '15:20'); ?>
+
+
+                  </span>
                 </div>
                 <div>
-                  <span>Tournoi de Maya Kopé</span>
+                  <span>Tournoi de Maya Kopé,Top Foot</span>
                 </div>
               </div>
+              <?php if(isset($match_i->team2)): ?>
               <div class="team-2">
                 <div class="team-name">
                   <div class="t-logo">
                     <div class="round-50-ps">
-                      <img src="<?php echo e(asset('assets/images/logo1.png')); ?>" class="img-fluid" alt="" />
+                      <?php if(isset($match_i->team2->image)): ?>
+                      <img src="<?php echo e(asset('assets/images/uploads/'.$match_i->team2->image ?? 'logo1.png')); ?>" class="img-fluid" alt="" />
+                    
+                      <?php else: ?>
+                    <img src="<?php echo e(asset('assets/images/logo1.png')); ?>" class="img-fluid" alt="" />
+                    
+                    <?php endif; ?>
                     </div>
                   </div>
-                  <div class="t-pseudo">ARS</div>
+                  <div class="t-pseudo"><?php echo e($match_i->team2->pseudo); ?></div>
                 </div>
               </div>
+              <?php endif; ?>
             </div>
           </div>
-          <div class="card mb-1">
-            <div class="card-body team-a-vs-b">
-              <div class="team-1">
-                <div class="team-name">
-                  <div class="t-logo">
-                    <div class="round-50-ps">
-                      <img src="<?php echo e(asset('assets/images/logo1.png')); ?>" class="img-fluid" alt="" />
-                    </div>
-                  </div>
-                  <div class="t-pseudo">LVP</div>
-                </div>
-              </div>
-              <div class="versus-time position-relative">
-                <div class="match-live">
-                  <span class="timer upcoming">13:00</span>
-                </div>
-                <div class="match-score">
-                  <span class="fw-bold">0:0</span>
-                </div>
-                <div>
-                  <span>Tournoi de Maya Kopé</span>
-                </div>
-              </div>
-              <div class="team-2">
-                <div class="team-name">
-                  <div class="t-logo">
-                    <div class="round-50-ps">
-                      <img src="<?php echo e(asset('assets/images/logo1.png')); ?>" class="img-fluid" alt="" />
-                    </div>
-                  </div>
-                  <div class="t-pseudo">ARS</div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="card mb-1">
-            <div class="card-body team-a-vs-b">
-              <div class="team-1">
-                <div class="team-name">
-                  <div class="t-logo">
-                    <div class="round-50-ps">
-                      <img src="<?php echo e(asset('assets/images/logo1.png')); ?>" class="img-fluid" alt="" />
-                    </div>
-                  </div>
-                  <div class="t-pseudo">LVP</div>
-                </div>
-              </div>
-              <div class="versus-time position-relative">
-                <div class="match-live">
-                  <span class="timer upcoming">Sam,15:15</span>
-                </div>
-                <div class="match-score">
-                  <span class="fw-bold">0:0</span>
-                </div>
-                <div>
-                  <span>Tournoi de Maya Kopé</span>
-                </div>
-              </div>
-              <div class="team-2">
-                <div class="team-name">
-                  <div class="t-logo">
-                    <div class="round-50-ps">
-                      <img src="<?php echo e(asset('assets/images/logo1.png')); ?>" class="img-fluid" alt="" />
-                    </div>
-                  </div>
-                  <div class="t-pseudo">ARS</div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="card mb-1">
-            <div class="card-body team-a-vs-b">
-              <div class="team-1">
-                <div class="team-name">
-                  <div class="t-logo">
-                    <div class="round-50-ps">
-                      <img src="<?php echo e(asset('assets/images/logo1.png')); ?>" class="img-fluid" alt="" />
-                    </div>
-                  </div>
-                  <div class="t-pseudo">LVP</div>
-                </div>
-              </div>
-              <div class="versus-time position-relative">
-                <div class="match-live">
-                  <span class="timer upcoming">Sam,14:20</span>
-                </div>
-                <div class="match-score">
-                  <span class="fw-bold">0:0</span>
-                </div>
-                <div>
-                  <span>Tournoi de Maya Kopé</span>
-                </div>
-              </div>
-              <div class="team-2">
-                <div class="team-name">
-                  <div class="t-logo">
-                    <div class="round-50-ps">
-                      <img src="<?php echo e(asset('assets/images/logo1.png')); ?>" class="img-fluid" alt="" />
-                    </div>
-                  </div>
-                  <div class="t-pseudo">ARS</div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="card mb-1">
-            <div class="card-body team-a-vs-b">
-              <div class="team-1">
-                <div class="team-name">
-                  <div class="t-logo">
-                    <div class="round-50-ps">
-                      <img src="<?php echo e(asset('assets/images/logo1.png')); ?>" class="img-fluid" alt="" />
-                    </div>
-                  </div>
-                  <div class="t-pseudo">LVP</div>
-                </div>
-              </div>
-              <div class="versus-time position-relative">
-                <div class="match-live">
-                  <span class="timer upcoming">Dim,13:00</span>
-                </div>
-                <div class="match-score">
-                  <span class="fw-bold">0:0</span>
-                </div>
-                <div>
-                  <span>Tournoi de Maya Kopé</span>
-                </div>
-              </div>
-              <div class="team-2">
-                <div class="team-name">
-                  <div class="t-logo">
-                    <div class="round-50-ps">
-                      <img src="<?php echo e(asset('assets/images/logo1.png')); ?>" class="img-fluid" alt="" />
-                    </div>
-                  </div>
-                  <div class="t-pseudo">ARS</div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="card mb-1">
-            <div class="card-body team-a-vs-b">
-              <div class="team-1">
-                <div class="team-name">
-                  <div class="t-logo">
-                    <div class="round-50-ps">
-                      <img src="<?php echo e(asset('assets/images/logo1.png')); ?>" class="img-fluid" alt="" />
-                    </div>
-                  </div>
-                  <div class="t-pseudo">LVP</div>
-                </div>
-              </div>
-              <div class="versus-time position-relative">
-                <div class="match-live">
-                  <span class="timer upcoming">Dim,15:20</span>
-                </div>
-                <div class="match-score">
-                  <span class="fw-bold">0:0</span>
-                </div>
-                <div>
-                  <span>Tournoi de Maya Kopé</span>
-                </div>
-              </div>
-              <div class="team-2">
-                <div class="team-name">
-                  <div class="t-logo">
-                    <div class="round-50-ps">
-                      <img src="<?php echo e(asset('assets/images/logo1.png')); ?>" class="img-fluid" alt="" />
-                    </div>
-                  </div>
-                  <div class="t-pseudo">ARS</div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+          
         </div>
+        <?php endif; ?>
       </div>
       <div class="row row-cols-1 row-cols-md-3 g-1 w-100 ">
         <div class="col mx-auto height-100">

@@ -124,18 +124,7 @@ this.submit();
 }, 800);
 });
 
-   /* document.getElementById('ficheForm').addEventListener('submit', function (e) {
-        e.preventDefault();
-
-        const team1 = document.getElementById('team1').value || "Équipe 1";
-        const team2 = document.getElementById('team2').value || "Équipe 2";
-        const gameTime = document.getElementById('gameTime').value || "90";
-        const ficheDate = document.getElementById('ficheDate').value || "Date à définir";
-
-        document.getElementById('preview-teams').innerHTML = `<span>${team1} vs ${team2}</span>`;
-        document.getElementById('preview-time').innerHTML = `<span>${gameTime} min</span>`;
-        document.getElementById('preview-date').innerHTML = `<span>${ficheDate}</span>`;
-    });*/
+  
 </script>
 <script>
                    

@@ -34,8 +34,15 @@ class TeamRepository
         return MatchRecord::create($data);
     }
     public function records(){
-        return MatchRecord::all();
+        return MatchRecord::whereDate('created_at', now()->format('Y-m-d'))->get();
     }
+    public function getFirstThreeRecords(){
+        return MatchRecord::orderBy('created_at', 'asc')
+                          ->take(3)  
+                          ->get();
+    }
+    
+    
     public function createEvent(array $data){
         return TeamEvents::create($data);
     }
@@ -79,12 +86,130 @@ public function getPlayer($id){
     $player=Player::find($id);
    return $player;
 }
+public function poules(){
+    return Poule::all();
+}
+public function rankTeamsForAllPoules()
+{
+    
+    $poules = $this->poules();
+
+    $rankedPoules = []; 
+
+    // Loop through each poule
+    foreach ($poules as $poule) {
+        
+        $rankedTeams = $poule->teams->sort(function ($a, $b) {
+            // Calculate the score for both teams
+            $scoreA = ($a->victories * 3) + ($a->nul * 1);
+            $scoreB = ($b->victories * 3) + ($b->nul * 1);
+
+            // First, compare by score (higher score ranks higher)
+            if ($scoreB != $scoreA) {
+                return $scoreB - $scoreA;
+            }
+
+            // If the score is the same, compare by goals conceded (fewer is better)
+            if ($a->buts_encaissees != $b->buts_encaissees) {
+                return $a->buts_encaissees - $b->buts_encaissees;
+            }
+
+            // If goals conceded are the same, compare by goals scored (optional)
+            if ($a->buts_marques != $b->buts_marques) {
+                return $b->buts_marques - $a->buts_marques;
+            }
+
+            // If everything is equal, return 0 (they are ranked the same)
+            return 0;
+        });
+
+        // Assign ranks to the teams
+        $rankedTeams = $rankedTeams->values()->map(function ($team, $index) {
+            $team->rank = $index + 1;
+            return $team;
+        });
+
+        // Add the poule and its ranked teams to the result array
+        $rankedPoules[] = [
+            'poule' => $poule->name,
+            'teams' => $rankedTeams
+        ];
+    }
+
+    return $rankedPoules;
+}
+
+
+public function getMatchStats($matchId, $teamId)
+{
+
+    $stats = TeamEvents::where('match_id', $matchId)
+        ->where('team_id', $teamId)
+        ->selectRaw('
+            SUM(but_marques) as total_goals,
+            SUM(carton_rouge) as total_red_cards,
+            SUM(carton_jaune) as total_yellow_cards,
+            match_id,
+            team_id
+        ')
+        ->groupBy('match_id', 'team_id')
+        ->first();
+
+    return [
+        'goals' => $stats->total_goals,
+        'yellow_cards' => $stats->total_yellow_cards,
+        'red_cards' => $stats->total_red_cards,
+        'match_id' => $stats->match_id,
+        'team_id' => $stats->team_id,
+    ];
+}
+public function ifPlay($matchid,$teamid){
+    return TeamEvents::where('team_id',$teamid)
+                  ->where('match_id',$matchid)
+                  ->first();
+}
+
 public  function goals($match_id, $team_id)
 {
     return TeamEvents::where('match_id', $match_id)
                 ->where('team_id', $team_id)
                 ->sum('but_marques');
 }
+public function getTopScoringPlayers()
+{
+    // Retrieve all players ordered by goals scored (buts_marques) in descending order
+    $players = Player::orderBy('buts_marques', 'desc')->get();
+
+    // Initialize an empty array to hold the top 6 players
+    $topPlayers = [];
+    
+    // Loop through the players and select the top 6
+    foreach ($players as $player) {
+        // If we already have 6 players, stop adding more
+        if (count($topPlayers) >= 6) {
+            break;
+        }
+
+        $index = null;
+        foreach ($topPlayers as $key => $topPlayer) {
+            if ($topPlayer->buts_marques == $player->buts_marques) {
+                $index = $key;
+                break;
+            }
+        }
+
+        if ($index !== null) {
+           
+            array_splice($topPlayers, $index, 0, [$player]);
+        } else {
+           
+            $topPlayers[] = $player;
+        }
+    }
+
+    return $topPlayers;
+}
+
 public  function team_event($match_id, $team_id)
 {
     return TeamEvents::where('match_id', $match_id)

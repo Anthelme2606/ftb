@@ -75,45 +75,62 @@
             </div>
         </div>
     </div>
+@php
+ $opponents=$team_s->opponents($teams,$team);
+@endphp
 
 <div class="col-md-4 mx-auto height-100 ">
 <div class="matchs d-flex flex-column">
+    @foreach($opponents as $opponent)
     <div class="card mb-1  ">
         <div class="card-body d-flex justify-content-between align-items-center">
             <div class="team d-flex justify-content-center align-items-center ">
             <div class="team-text">
-                <span class="px-2 rounded bg-white text-primary">Talent </span>
+                <span class="px-2 rounded bg-white text-primary">{{$team['pseudo']}} </span>
              </div>
              <div class="team-l1">
                 <div class="team-l2">
+                    @if($team['image'])
+                <img class="img-fluid" src="{{asset('assets/images/uploads/'.$team['image'])}}">
+                @else
                 <img class="img-fluid" src="{{asset('assets/images/logo1.png')}}">
+                @endif
                 </div>
              </div>
            </div>
            <div class="versus-time d-flex flex-column justify-content-center align-items-center">
             <div class="date-play">
-                <h5 class="small-text">Samedi,21 2024. 14:00</h5></div>
+                <h5 class="small-text">
+                {{$opponent['date_match']}},{{$opponent['heure_match'] ?? '15:00'}}   
+                </h5></div>
             <div class="text">
             <strong>VS</strong>
             </div>
             <div class="score">
-                <span>0:0</span>
+                <span>--:--</span>
             </div>
            </div>
            <div class="team d-flex justify-content-center align-items-center ">
             
              <div class="team-l1">
                 <div class="team-l2">
+                    @if($opponent['image'])
+                <img class="img-fluid" src="{{asset('assets/images/uploads/'.$opponent['image'])}}">
+                @else
                 <img class="img-fluid" src="{{asset('assets/images/logo1.png')}}">
+                @endif
                 </div>
              </div>
              <div class="team-text">
-                <span class="px-2 rounded bg-white text-primary">Talent</span>
+                <span class="px-2 rounded bg-white text-primary">
+                    {{$opponent['pseudo']}}
+                </span>
              </div>
            </div>
         </div>
     </div>
-    <div class="card mb-1 ">
+    @endforeach
+    {{-- <div class="card mb-1 ">
         <div class="card-body d-flex justify-content-between align-items-center">
             <div class="team d-flex justify-content-center align-items-center ">
             <div class="team-text">
@@ -180,9 +197,10 @@
              </div>
            </div>
         </div>
-    </div>
+    </div> --}}
 </div>
 </div>
+
 </div>
 @endforeach
 @endif
