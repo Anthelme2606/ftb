@@ -73,9 +73,7 @@
           <div class="titre d-flex justify-content-center align-items-center">
             <h5 class="text-pretty text-center">Historique des matchs</h5>
           </div>
-          {{-- @if(isset($stats))
-         {{ dd($stats);}}
-          @endif --}}
+         
           @if(isset($stats) && !empty($stats))
           <div class="row row-cols-1 g-1 row-cols-md-3 ">
          @foreach($stats as $match_p)
