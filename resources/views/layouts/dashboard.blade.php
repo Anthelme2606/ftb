@@ -22,7 +22,7 @@
             <div class="team-1">
                 <div class="team-name">
                   <div class="t-name">{{$match->team1->nom}}</div>
-                  <div class="t-point">{{$match->team1->defaites*1 + $match->team1->victoires*3 }} point(s)</div>
+                  <div class="t-point">{{$match->team1->nul*1 + $match->team1->victoires*3 }} point(s)</div>
                 </div>
                 <div class="team-logo">
                   <div class="round-50-team">
@@ -63,7 +63,7 @@
                 </div>
                 <div class="team-name">
                   <div class="t-name">{{$match->team2->nom}}</div>
-                  <div class="t-point">{{$match->team2->defaites*1 + $match->team2->victoires*3 }} point(s)</div>
+                  <div class="t-point">{{$match->team2->nul*1 + $match->team2->victoires*3 }} point(s)</div>
                 </div>
               </div>
               @endif
@@ -86,7 +86,7 @@
                   @if($match_p['match']['id']===$match->id)
                   <div class="match-mt live">Live</div>
                   @else
-                  <div class="match-mt live">{{$match_p['match']['date_heure']}}</div>
+                  <div class="match-mt live">{{$match_p['match']['date_match']}}</div>
 
                   @endif
                   <div class="teams d-flex">

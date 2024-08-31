@@ -90,7 +90,7 @@
         </div>
         @endforeach
         </div> 
-        <div class="row row-cols-1 g-1 w-100 mt-1">
+        {{-- <div class="row row-cols-1 g-1 w-100 mt-1">
             <div class="col-12 mx-auto height-100">
                 <div class="card">
                     <div class="card-header d-flex justify-content-center align-items-center">
@@ -160,7 +160,7 @@
             </div>
            
            
-        </div>
+        </div> --}}
 
 </div>
 </div>

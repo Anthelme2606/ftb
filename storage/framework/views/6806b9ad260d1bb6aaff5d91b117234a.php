@@ -26,85 +26,46 @@
 <div class="dashboard">
 <div class="content mt-1">
     <?php
-   $trophies = [
-    [
-        'mdi' => 'mdi-trophy',
-        'trophy' => 'Champion du Tournoi',
-        'star' => 'mdi-star'
-    ],
-    [
-        'mdi' => 'mdi-trophy-variant',
-        'trophy' => 'Finaliste',
-        'star' => 'mdi-star'
-    ],
-    [
-        'mdi' => 'mdi-soccer',
-        'trophy' => 'Meilleur Buteur',
-        'star' => 'mdi-star'
-    ],
-    [
-        'mdi' => 'mdi-trophy-outline',
-        'trophy' => 'Meilleur Gardien de But',
-        'star' => 'mdi-star'
-    ],
-    [
-        'mdi' => 'mdi-star',
-        'trophy' => 'Meilleur Joueur',
-        // 'star' => 'mdi-star'
-    ],
-    [
-        'mdi' => 'mdi-shield',
-        'trophy' => 'Meilleur Défenseur',
-        'star' => 'mdi-star'
-    ],
-    [
-        'mdi' => 'mdi-trophy-outline',
-        'trophy' => 'Meilleur Passer',
-        'star' => 'mdi-star'
-    ],
-    [
-        'mdi' => 'mdi-trophy-outline',
-        'trophy' => 'Meilleur Entraîneur',
-        'star' => 'mdi-star'
-    ],
-    [
-        'mdi' => 'mdi-handshake',
-        'trophy' => 'Équipe Fair-Play',
-        'star' => 'mdi-star'
-    ],
-    [
-        'mdi' => 'mdi-star-circle',
-        'trophy' => 'Meilleur Jeune Talent',
-        'star' => 'mdi-star'
-    ],
-    [
-        'mdi' => 'mdi-football',
-        'trophy' => 'Meilleur Joueur de Terrain',
-        'star' => 'mdi-star'
-    ],
-    [
-        'mdi' => 'mdi-trophy-award',
-        'trophy' => 'Meilleur Joueur de la Saison',
-        'star' => 'mdi-star'
-    ]
-];
 
+$historiques = array_filter($historiques, function ($item) {
+    return !in_array(null, $item, true);
+});
+// dd($historiques)
     ?>
+    <?php if(isset($historiques) && !empty($historiques) && $historiques!==null): ?>
+    
     <div class="row row-cols-1 row-cols-md-4 w-100 g-1">
-        <?php $__currentLoopData = $trophies; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $trophy): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+        <?php $__currentLoopData = $historiques; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $keys=>$values): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+ 
+        
+        <?php if(isset($values)&& isset($keys) && !empty($values)): ?>
+        <?php $__currentLoopData = $values; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $sub_k=>$value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+        <?php echo e(dd($value[$sub_k])); ?>
+
+        
+      
         <div class="col mx-auto d-flex flex-column flex-grouw-1 height-100">
             <div class="card flex-grow-1 flex-column position-relative">
                 <div class="versus d-flex align-items-center justify-content-between">
                    
                     <div class="round-1">
                         <div class="round-2">
-                            <img class="img-fluid" src="<?php echo e(asset('assets/images/logo1.png')); ?>">
+                            <?php if(!empty($value['team1']['image'])): ?>
+                            <img class="img-fluid" src="<?php echo e(asset('assets/images/uploads/'.$value['team1']['image'])); ?>">
+                           <?php else: ?>
+                           <img class="img-fluid" src="<?php echo e(asset('assets/images/logo1.png')); ?>">
+                           <?php endif; ?>
                         </div>  
                     </div>
+                    
                     <div class="date&time d-flex flex-column justify-content-center align-items-center">
-                        <h6>16/08/2024</h6>
+                        <h6>
+                        <?php echo e($value['date']); ?></h6>
                         <span>VS</span>
-                        <span class="score">1:2</span>
+                        <span class="score">
+                            <?php echo e($value['goals1']); ?>:<?php echo e($value['goals2']); ?>
+
+                        </span>
                       </div> 
                       <div class="round-1">
                         <div class="round-2">
@@ -112,32 +73,128 @@
                         </div>  
                     </div>
                 </div>
+                <style>
+                     .player-list {
+            font-size: 8px; 
+            text-align: center;
+           
+        }
+        .player-item {
+            margin-right: 8px; 
+        }
+                </style>
                 <div class="buteurs d-flex justify-content-between align-items-center">
                     <div class="d-flex flex-column">
-                        <div class="player&score d-flex">
-                            <span class="mx-2 text-center"> Abalo</span>
-                              <span class="mx-2 text-center">22'</span>
-                             
+                        <?php if(isset($value['team1Events'])): ?>
+                        <?php $__currentLoopData = $value['team1Events']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $event1): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <?php if($event1['type']=='but'): ?>
+                        <span class="text-center text-success">Buts</span>
+                        <div class="player&score">
+                           
+                              <div class="player-list row g-1">
+                                <?php for($i=0;$i<$event1['buts'];$i++): ?>
+                                <div class="col-md-3 col-3 player-item ">
+                                    <?php echo e($event1['player']); ?>
+
+                                </div>
+                                <?php endfor; ?>
+                            
+                              </div> 
                         </div>
+                        <?php endif; ?>
+                        <?php if($event1['type']=='jaune'): ?>
+                        <span class="text-center text-warning">Cj</span>
+                        <div class="player&score">
+                           
+                              <div class="player-list row g-1">
+                                <?php for($i=0;$i<$event1['jaunes'];$i++): ?>
+                                <div class="col-md-3 col-3 player-item ">
+                                    <?php echo e($event1['player']); ?>
+
+                                </div>
+                                <?php endfor; ?>
+                            
+                              </div> 
+                        </div>
+                        <?php endif; ?>
+                        <?php if($event1['type']=='rouge'): ?>
+                        <span class="text-center text-danger">CR</span>
+                        <div class="player&score">
+                           
+                              <div class="player-list row g-1">
+                                <?php for($i=0;$i<$event1['rouges'];$i++): ?>
+                                <div class="col-md-3 col-3 player-item ">
+                                    <?php echo e($event1['player']); ?>
+
+                                </div>
+                                <?php endfor; ?>
+                            
+                              </div> 
+                        </div>
+                        <?php endif; ?>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        <?php endif; ?>
                     </div>
                     <div class="d-flex flex-column">
-                    <div class="player&score d-flex">
-                        <span class="mx-2 text-center"> kossi</span>
-                        <span class="mx-2 text-center">41'</span>
-                         
+                        <?php if(isset($value['team2Events'])): ?>
+                        <?php $__currentLoopData = $value['team2Events']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $event2): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <?php if($event2['type']=='but'): ?>
+                        <span class="text-center text-success">Buts</span>
+                        <div class="player&score">
+                           
+                              <div class="player-list row g-1">
+                                <?php for($i=0;$i<$event2['buts'];$i++): ?>
+                                <div class="col-md-3 col-3 player-item">
+                                    <?php echo e($event2['player']); ?>
+
+                                </div>
+                                <?php endfor; ?>
+                              
+                              </div> 
+                        </div>
+                        <?php endif; ?>
+                        <?php if($event2['type']=='jaune'): ?>
+                        <span class="text-center text-warning">CJ</span>
+                        <div class="player&score">
+                           
+                              <div class="player-list row g-1">
+                                <?php for($i=0;$i<$event2['jaunes'];$i++): ?>
+                                <div class="col-md-3 col-3 player-item ">
+                                    <?php echo e($event2['player']); ?>
+
+                                </div>
+                                <?php endfor; ?>
+                            
+                              </div> 
+                        </div>
+                        <?php endif; ?>
+                        <?php if($event1['type']=='rouge'): ?>
+                        <span class="text-center text-danger">CR</span>
+                        <div class="player&score">
+                           
+                              <div class="player-list row g-1">
+                                <?php for($i=0;$i<$event2['rouges'];$i++): ?>
+                                <div class="col-md-3 col-3 player-item ">
+                                    <?php echo e($event2['player']); ?>
+
+                                </div>
+                                <?php endfor; ?>
+                            
+                              </div> 
+                        </div>
+                        <?php endif; ?>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        <?php endif; ?>
                     </div>
-                    <div class="player&score d-flex">
-                        <span class="mx-2 text-center"> kossi</span>
-                        <span class="mx-2 text-center">74'</span>
-                         
-                    </div>
-                </div>
                 </div>   
                
             </div>
         </div>
         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+        <?php endif; ?>
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         </div> 
+        <?php endif; ?>
     </div>
 </div>
 <?php $__env->stopSection(); ?>

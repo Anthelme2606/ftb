@@ -119,7 +119,7 @@ function displayMatches(teamId) {
                 Object.values(opponents).forEach(opponent => {
                     content += `
                     <div class="col">
-                        <divid="{{$team->id}}" class="card position-relative card-checker" data-team-id="${opponent.match_id}">
+                        <div id="{{$team->id}}" class="card position-relative card-checker" data-team-id="${opponent.match_id}">
                             <div class="card-body text-center d-flex justify-content-center align-items-center">
                                 <div class="position-absolute top-0 start-0 m-2">
                                     <input type="checkbox" name="matchSelect" class="form-check-input match-check">

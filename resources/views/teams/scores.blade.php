@@ -1,5 +1,5 @@
 @extends('layouts.index')
-@section('title','Trophés')
+@section('title','Historiques')
 @section('sidebar')
 <x-sidebar/>
 @endsection
@@ -7,118 +7,153 @@
 <div class="dashboard">
 <div class="content mt-1">
     @php
-   $trophies = [
-    [
-        'mdi' => 'mdi-trophy',
-        'trophy' => 'Champion du Tournoi',
-        'star' => 'mdi-star'
-    ],
-    [
-        'mdi' => 'mdi-trophy-variant',
-        'trophy' => 'Finaliste',
-        'star' => 'mdi-star'
-    ],
-    [
-        'mdi' => 'mdi-soccer',
-        'trophy' => 'Meilleur Buteur',
-        'star' => 'mdi-star'
-    ],
-    [
-        'mdi' => 'mdi-trophy-outline',
-        'trophy' => 'Meilleur Gardien de But',
-        'star' => 'mdi-star'
-    ],
-    [
-        'mdi' => 'mdi-star',
-        'trophy' => 'Meilleur Joueur',
-        // 'star' => 'mdi-star'
-    ],
-    [
-        'mdi' => 'mdi-shield',
-        'trophy' => 'Meilleur Défenseur',
-        'star' => 'mdi-star'
-    ],
-    [
-        'mdi' => 'mdi-trophy-outline',
-        'trophy' => 'Meilleur Passer',
-        'star' => 'mdi-star'
-    ],
-    [
-        'mdi' => 'mdi-trophy-outline',
-        'trophy' => 'Meilleur Entraîneur',
-        'star' => 'mdi-star'
-    ],
-    [
-        'mdi' => 'mdi-handshake',
-        'trophy' => 'Équipe Fair-Play',
-        'star' => 'mdi-star'
-    ],
-    [
-        'mdi' => 'mdi-star-circle',
-        'trophy' => 'Meilleur Jeune Talent',
-        'star' => 'mdi-star'
-    ],
-    [
-        'mdi' => 'mdi-football',
-        'trophy' => 'Meilleur Joueur de Terrain',
-        'star' => 'mdi-star'
-    ],
-    [
-        'mdi' => 'mdi-trophy-award',
-        'trophy' => 'Meilleur Joueur de la Saison',
-        'star' => 'mdi-star'
-    ]
-];
 
+$historiques = array_filter($historiques, function ($item) {
+    return !in_array(null, $item, true);
+});
+// dd($historiques)
     @endphp
-    <div class="row row-cols-1 row-cols-md-4 w-100 g-1">
-        @foreach($trophies as $trophy)
-        <div class="col mx-auto d-flex flex-column flex-grouw-1 height-100">
-            <div class="card flex-grow-1 flex-column position-relative">
-                <div class="versus d-flex align-items-center justify-content-between">
+     <style>
+   .card {
+            height: 100%;
+        }
+        .yellow-card {
+            background-color: #ffc107;
+            color: #000;
+        }
+        .red-card {
+            background-color: #dc3545;
+            color: #fff;
+        }
+   </style>
+    @if(isset($historiques) && !empty($historiques) && $historiques!==null)
+    {{-- {{dd($historiques)}} --}}
+    <div class="row row-cols-1 row-cols-md-3 w-100 g-1">
+        @foreach($historiques as $keys=>$values)
+ 
+       
+        @if(isset($values)&& isset($keys) && !empty($values))
+        @foreach($values as $sub_k=>$value)
+        <div class="col height-100">
+            <div class="card ">
+                <div class="card-header text-center">
                    
-                    <div class="round-1">
-                        <div class="round-2">
-                            <img class="img-fluid" src="{{asset('assets/images/logo1.png')}}">
-                        </div>  
+                    <p class="text-muted">{{
+                        $value['date']
+                       }}</p>
+                    <div class="d-flex justify-content-center align-items-center">
+                        @if(!empty($value['team1']['image']))
+                        <div class="round-1">
+                            <div class="round-2">
+                        <img class="img-fluid" src="{{asset('assets/images/uploads/'.$value['team1']['image'])}}">
+                    </div>  
                     </div>
-                    <div class="date&time d-flex flex-column justify-content-center align-items-center">
-                        <h6>16/08/2024</h6>
-                        <span>VS</span>
-                        <span class="score">1:2</span>
-                      </div> 
-                      <div class="round-1">
-                        <div class="round-2">
-                            <img class="img-fluid" src="{{asset('assets/images/logo1.png')}}">
-                        </div>  
+                        @else
+                        <div class="round-1">
+                            <div class="round-2">
+                     
+                       <img class="img-fluid" src="{{asset('assets/images/logo1.png')}}">
+                    </div>  
+                </div>
+                       @endif
+                        <span class="fs-4 fw-bold">{{$value['goals1']}}</span>
+                        <span class="fs-4 fw-bold mx-2">-</span>
+                        <span class="fs-4 fw-bold">{{$value['goals2']}}</span>
+                        @if(!empty($value['team2']['image']))
+                        <div class="round-1">
+                            <div class="round-2">
+                        <img class="img-fluid" src="{{asset('assets/images/uploads/'.$value['team2']['image'])}}">
+                            </div>
+                        </div>
+                        @else
+                        <div class="round-1">
+                            <div class="round-2">
+                     
+                       <img class="img-fluid" src="{{asset('assets/images/logo1.png')}}">
+                            </div >
+                        </div>
+                       @endif
                     </div>
                 </div>
-                <div class="buteurs d-flex justify-content-between align-items-center">
-                    <div class="d-flex flex-column">
-                        <div class="player&score d-flex">
-                            <span class="mx-2 text-center"> Abalo</span>
-                              <span class="mx-2 text-center">22'</span>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6">
+                            <h6 class="text-center">
+                                {{$value['team1']['nom']}}
+                            </h6>
+                            <ul class="list-unstyled">
+                                @if(isset($value['team1Events']))
+                                @foreach($value['team1Events'] as $event1)
+                                @if($event1['type']=='but' || $event1['type']=='jaune' || $event1['type']=='rouge')
+                                <li class="d-flex justify-content-between align-items-center">
+                                    {{$event1['player']}}
+                                    <span>
+                                        @if(isset($event1['buts']))
+                                        <span class="badge bg-secondary me-1">⚽{{ $event1['buts']}}</span>
+                                        @endif
+                                        @if(isset($event1['jaunes']))
+                                        <span class="badge yellow-card">▪{{$event1['jaunes']}}</span>
+                                        @endif
+                                        @if(isset($event1['rouges']))
+                                        <span class="badge red-card">▪{{$event1['rouges']}}</span>
+                                        @endif
+                                    </span>
+                                </li>
+                                @endif
+                                @endforeach
+                                @endif
+                                
+                                
+                               
                              
+                                
+                            </ul>
+                        </div>
+                        <div class="col-6">
+                            <h6 class="text-center">
+                                {{$value['team2']['nom']}}
+                            </h6>
+                            <ul class="list-unstyled">
+                                @if(isset($value['team2Events']))
+                                @foreach($value['team2Events'] as $event2)
+                                @if($event2['type']=='but' || $event2['type']=='jaune' || $event2['type']=='rouge')
+                                <li class="d-flex justify-content-between align-items-center">
+                                    {{$event2['player']}}
+                                    <span>
+                                        @if(isset($event2['buts']))
+                                        <span class="badge bg-secondary me-1">⚽{{ $event2['buts']}}</span>
+                                        @endif
+                                        @if(isset($event2['jaunes']))
+                                        <span class="badge yellow-card">▪{{$event2['jaunes']}}</span>
+                                        @endif
+                                        @if(isset($event2['rouges']))
+                                        <span class="badge red-card">▪{{$event2['rouges']}}</span>
+                                        @endif
+                                    </span>
+                                </li>
+                                @endif
+                                @endforeach
+                                @endif
+                                
+                                
+                               
+                             
+                                
+                            </ul>
                         </div>
                     </div>
-                    <div class="d-flex flex-column">
-                    <div class="player&score d-flex">
-                        <span class="mx-2 text-center"> kossi</span>
-                        <span class="mx-2 text-center">41'</span>
-                         
-                    </div>
-                    <div class="player&score d-flex">
-                        <span class="mx-2 text-center"> kossi</span>
-                        <span class="mx-2 text-center">74'</span>
-                         
-                    </div>
                 </div>
-                </div>   
-               
             </div>
         </div>
+      
+       
+       
+        @endforeach 
+        @endif
         @endforeach
         </div> 
+        @endif
+      
     </div>
 </div>
 @endsection

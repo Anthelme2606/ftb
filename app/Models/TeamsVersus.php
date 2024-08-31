@@ -31,5 +31,13 @@ class TeamsVersus extends Model
     {
         return $this->belongsTo(MatchRecord::class, 'id','match_id');
     }
+    public function teamEvents()
+    {
+        return $this->hasMany(TeamEvents::class, 'match_id');
+    }
+    public function events()
+    {
+        return $this->hasMany(TeamEvents::class, 'match_id');
+    }
 }
 

@@ -32,6 +32,12 @@
                         <label for="dorsa" class="form-label">Dorsa</label>
                         <input type="number" min="1" name="dorsa" id="dorsa" class="form-control" required>
                     </div>
+                    <div class="uploader">
+                        <img id="playerImage" src="https://via.placeholder.com/100x50" alt="Logo">
+                        <input type="file" id="player-image" name="logo" class="d-none" accept="image/*" onchange="displayImage(this, 'playerImage')">
+                        <label for="player-image" class="btn-upload">Charger le logo pour le joueur</label>
+                   
+                    </div>
                     <div class="d-flex justify-content-center">
                         <button type="submit" class="btn but-primary " id="player-submit">
                             <span id="player-loader" class="spinner-border spin-l text-success spinner-border-sm d-none"></span>

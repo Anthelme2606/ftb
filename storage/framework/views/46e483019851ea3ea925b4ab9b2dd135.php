@@ -288,7 +288,7 @@
         </div>
         <?php endif; ?>
       </div>
-      
+    
       <div class="row row-cols-1 row-cols-md-3 g-1 w-100 ">
         <?php if(isset($poules)): ?>
         <?php $__currentLoopData = $poules; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $poule): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>

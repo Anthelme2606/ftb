@@ -46,7 +46,8 @@ class TeamService
         }
     }
     public function matches(){
-    return $this->teamRepository->matches();}
+    return $this->teamRepository->matches();
+}
     public function matchProche(){
         return $this->teamRepository->matchProche();}
         public function matchOrga(){
@@ -89,6 +90,7 @@ class TeamService
        
         return '00:00';
     }
+   
     public function match_creation(array $data){
         if($data){
             $data['premier_mi_temps']=$data['timer'];
@@ -215,18 +217,29 @@ class TeamService
                                 $goals1,
                                 $goals2);
                            
-                              
+                                $team_e['nul']=$this->teamRepository->countNuls($teamId);
+                                $team_e['defaites']=$this->teamRepository->countDefaites($teamId);
+                                $team_e['victoires']=$this->teamRepository->countVictories($teamId);
+                               // $team2=$this->team2($teamId,$match_id);
+                                $team2['nul']=$this->teamRepository->countNuls($team2['id']);
+                                $team2['defaites']=$this->teamRepository->countDefaites($team2['id']);
+                                $team2['victoires']=$this->teamRepository->countVictories($team2['id']);
+                                $this->teamRepository->updateTeam($teamId,$team_e);//after
+                                $this->teamRepository->updateTeam($team2['id'],$team2);//after
+                                       
+                             
                             
                             
                          }
-                         $team_e['nul']=$this->teamRepository->countNuls($teamId);
-                         $team_e['defaites']=$this->teamRepository->countDefaites($teamId);
-                         $team_e['victoires']=$this->teamRepository->countVictories($teamId);
-                         $team2['nul']=$this->teamRepository->countNuls($team2['id']);
-                         $team2['defaites']=$this->teamRepository->countDefaites($team2['id']);
-                         $team2['victoires']=$this->teamRepository->countVictories($team2['id']);
-                         $this->teamRepository->updateTeam($teamId,$team_e);//after
-                         $this->teamRepository->updateTeam($team2['id'],$team2);//after
+                        //  $team_e['nul']=$this->teamRepository->countNuls($teamId);
+                        //  $team_e['defaites']=$this->teamRepository->countDefaites($teamId);
+                        //  $team_e['victoires']=$this->teamRepository->countVictories($teamId);
+                        // // $team2=$this->team2($teamId,$match_id);
+                        //  $team2['nul']=$this->teamRepository->countNuls($team2['id']);
+                        //  $team2['defaites']=$this->teamRepository->countDefaites($team2['id']);
+                        //  $team2['victoires']=$this->teamRepository->countVictories($team2['id']);
+                        //  $this->teamRepository->updateTeam($teamId,$team_e);//after
+                        //  $this->teamRepository->updateTeam($team2['id'],$team2);//after
                                 
                       
                         if(!empty($player['play']) ){
@@ -406,6 +419,64 @@ public function isDateValid($date)
     {
         $teams = [];
         $records = $this->getFirstThreeRecords();
+       //dd($records);
+        foreach ($records as $record) {
+            $match = $record->match;
+            $team1 = $match->team1;
+            $team2 = $match->team2;
+    
+            $team_1_p = $this->teamRepository->ifPlay($match->id, $team1->id);
+            $team_2_p = $this->teamRepository->ifPlay($match->id, $team2->id);
+    
+            if (isset($team_1_p) && isset($team_2_p)) {
+                $stats1 = $this->getMatchStats($match->id, $team1->id);
+                $stats2 = $this->getMatchStats($match->id, $team2->id);
+    
+                if ($stats1['goals'] > $stats2['goals']) {
+                    $team1['winner'] = 1;
+                    $team2['winner'] = 0;
+                } else {
+                    $team1['winner'] = 0;
+                    $team2['winner'] = 1;
+                }
+    
+                // Adding stats to team1
+                $team1['goals'] = $stats1['goals'];
+                $team1['reds'] = $stats1['red_cards'];
+                $team1['yellows'] = $stats1['yellow_cards'];
+    
+                // Adding stats to team2
+                $team2['goals'] = $stats2['goals'];
+                $team2['reds'] = $stats2['red_cards'];
+                $team2['yellows'] = $stats2['yellow_cards'];
+    
+                // Adding both teams to the $teams array
+                $teams[] = [
+                    "team1" => $team1,
+                    "team2" => $team2,
+                    'match'=>$match,
+                ];
+            }
+        }
+    
+        return $teams;
+    }
+    public function historiques(){
+        $records=$this->allRecords();
+       
+        $details=[];
+        foreach($records as $record){
+         $details[]=[
+            $this->teamRepository->getMatchDetails($record->match_id)
+         ] ;  
+        }
+        // dd($details);
+        return $details;
+    }
+    public function statis()
+    {
+        $teams = [];
+        $records = $this->allRecords();
     
         foreach ($records as $record) {
             $match = $record->match;
@@ -448,6 +519,7 @@ public function isDateValid($date)
     
         return $teams;
     }
+
     public function poules_r(){
         return $this->teamRepository->rankTeamsForAllPoules();
     }
@@ -501,6 +573,9 @@ public function isDateValid($date)
          return $this->teamById($team1_id);
  
      }
+     public function allRecords(){
+        return $this->teamRepository->allRecords();
+     }
     
 
     
@@ -536,7 +611,7 @@ public function isDateValid($date)
                 }
     
                 // Mettre à jour les données du joueur dans le dépôt
-                $this->teamRepository->but_carton($p_e_a['id'], $p_e_a);
+                // $this->teamRepository->but_carton($p_e_a['id'], $p_e_a);
     
                 // Retourner un message de succès
                 return redirect()->back()->with('success', 'Sauvegarde effectuée avec succès.');

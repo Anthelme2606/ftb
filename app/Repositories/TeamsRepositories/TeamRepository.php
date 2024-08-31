@@ -9,6 +9,7 @@ use App\Models\TeamsVersus;
 use App\Models\TeamEvents;
 use App\Models\Representant;
 use App\Models\MatchRecord;
+use Carbon\Carbon;
 
 class TeamRepository
 {
@@ -37,23 +38,31 @@ class TeamRepository
         return MatchRecord::whereDate('created_at', now()->format('Y-m-d'))->get();
     }
     public function getFirstThreeRecords(){
-        return MatchRecord::orderBy('created_at', 'asc')
-                          ->take(3)  
+        return MatchRecord::orderBy('created_at', 'desc') 
+                          ->take(3)
                           ->get();
+                           
+    }
+    public function allRecords(){
+        return MatchRecord::all();
     }
     
     
     public function createEvent(array $data){
         return TeamEvents::create($data);
     }
-    public function matchProche(){
-        return TeamsVersus::whereNotNull('date_match')->orderBy('date_match', 'asc')->first();
+    public function matchProche()
+    {
+        return TeamsVersus::whereNotNull('date_match')
+            ->where('date_match', '>=', Carbon::now())
+            ->orderBy('date_match', 'asc')
+            ->first();
     }
     public function matchOrga(){
         return TeamsVersus::whereNotNull('date_match')->orderBy('date_match', 'asc')->get();
     }
     public function matches(){
-        return TeamsVersus::all();
+        return TeamsVersus::all(); 
     }
     public function match_event_eachplayer($match_id,$team_id,$player_id){
         $event= TeamEvents::where('match_id',$match_id)
@@ -140,6 +149,9 @@ public function rankTeamsForAllPoules()
 }
 
 
+public function teams(){
+    return Team::all();
+}
 public function getMatchStats($matchId, $teamId)
 {
 
@@ -162,6 +174,109 @@ public function getMatchStats($matchId, $teamId)
         'match_id' => $stats->match_id,
         'team_id' => $stats->team_id,
     ];
+}
+public function match($matchid){
+    return TeamsVersus::find($matchid);
+}
+public function getMatchDetails($matchId){
+    $match_cur=$this->match($matchId);
+    $team1=$match_cur->team1;
+    $team2=$match_cur->team2;
+    $team1Events=[];
+    $team2Events=[];
+   $yes1=$this->ifPlay($matchId,$team1->id);
+   $yes2=$this->ifPlay($matchId,$team2->id);
+   if(isset($yes1) && isset($yes2)){
+    $match=TeamsVersus::with(['team1','team2','events.player'])->findOrFail($matchId);
+     $stats1=$this->getMatchStats($matchId,$match->team1->id);
+     $stats2=$this->getMatchStats($matchId,$match->team2->id);
+      foreach($match->events as $event){
+       $minute=$event->updated_at->format('i');
+       if($event->but_marques > 0){
+        if($event->team_id==$match->team1_id){
+          
+            $team1Events[]=[
+                'player'=>$event->player->nom,
+                'minute'=>$minute,
+                  'buts'=>$event['but_marques'],
+                'type'=>'but',
+            ];
+        }elseif($event->team_id==$match->team2_id){
+           
+
+            $team2Events[]=[
+                'player'=>$event->player->nom,
+                'minute'=>$minute,
+                'buts'=>$event['but_marques'],
+                'type'=>'but',
+            ];
+        }
+       
+       }
+       if($event->carton_rouge >0){
+
+        if($event->team_id==$match->team1_id){
+          
+            $team1Events[]=[
+                'player'=>$event->player->nom,
+                
+                'rouges'=>$event->carton_rouge,
+                'minute'=>$minute,
+                'type'=>'rouge',
+            ];
+        }elseif($event->team_id==$match->team2_id){
+           
+            $team2Events[]=[
+                'player'=>$event->player->nom,
+                'rouges'=>$event->carton_rouge,
+                'minute'=>$minute,
+                'type'=>'rouge',
+            ];
+        }
+            
+       }
+       if($event->carton_jaune >0){
+
+        if($event->team_id==$match->team1_id){
+          
+            $team1Events[]=[
+                'player'=>$event->player->nom,
+                'jaunes'=>$event->carton_jaune,
+                'minute'=>$minute,
+                'type'=>'jaune',
+            ];
+        }elseif($event->team_id==$match->team2_id){
+           
+            $team2Events[]=[
+                'player'=>$event->player->nom,
+                 'jaunes'=>$event->carton_jaune,
+                'minute'=>$minute,
+                'type'=>'jaune',
+            ];
+        }
+            
+       }
+      }
+      return [
+        'team1'=>[
+            'nom'=>$match->team1->nom,
+            'image'=>$match->team1->image,
+        ],
+
+        'goals1'=>$stats1['goals'],
+        'goals2'=>$stats2['goals'],
+       'team2'=>[
+            'nom'=>$match->team2->nom,
+            'image'=>$match->team2->image,
+        ],
+        'time'=>$match->heure_match,
+        'date'=>$match->date_match,
+         'team1Events'=>$team1Events,
+         'team2Events'=>$team2Events,
+
+      ];
+    }
+    
 }
 public function ifPlay($matchid,$teamid){
     return TeamEvents::where('team_id',$teamid)
