@@ -77,7 +77,7 @@
           @if(isset($stats) && !empty($stats))
           <div class="row row-cols-1 g-1 row-cols-md-3 ">
          @foreach($stats as $match_p)
-         
+          @if(!empty($match_p['match']) && !empty($match_p['team1']) && !empty($match_p['team2']))
             <div class="col match-list px-1">
               <div class="card  match-li">
                 <div class="card-header d-flex flex-column">
@@ -146,7 +146,7 @@
                 @endif
               </div>
             </div>
-           
+           @endif
             @endforeach
             
             {{-- <div class="col match-list">

@@ -94,7 +94,8 @@
           <?php if(isset($stats) && !empty($stats)): ?>
           <div class="row row-cols-1 g-1 row-cols-md-3 ">
          <?php $__currentLoopData = $stats; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $match_p): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-         
+          <?php echo e(dd($match_p)); ?>
+
             <div class="col match-list px-1">
               <div class="card  match-li">
                 <div class="card-header d-flex flex-column">
