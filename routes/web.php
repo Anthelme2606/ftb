@@ -13,7 +13,7 @@ Route::post('/post-teams',[TeamController::class,'store'])->name('store-team');
 Route::post('/post-player',[PlayersController::class,'store'])->name('store-player');
 Route::get('/login',[AuthController::class,'login'])->name('login');
 Route::get('/teams-players',[TeamPlayerController::class,'creation'])->name('team-player');
-Route::get('/trophies',[PlayersController::class,'trophies'])->name('trophies');
+Route::get('/trophes',[PlayersController::class,'trophies'])->name('trophies');
 Route::get('/scores',[ScoreController::class,'index'])->name('scores');
 Route::post('/upload-file',[HomeController::class,'upload'])->name('upload.file');
 Route::post('/teams-update',[TeamPlayerController::class,'t_update'])->name('t_update');

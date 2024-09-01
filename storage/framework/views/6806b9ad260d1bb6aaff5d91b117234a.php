@@ -1,5 +1,5 @@
 
-<?php $__env->startSection('title','Trophés'); ?>
+<?php $__env->startSection('title','Historiques'); ?>
 <?php $__env->startSection('sidebar'); ?>
 <?php if (isset($component)) { $__componentOriginald31f0a1d6e85408eecaaa9471b609820 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginald31f0a1d6e85408eecaaa9471b609820 = $attributes; } ?>
@@ -32,169 +32,149 @@ $historiques = array_filter($historiques, function ($item) {
 });
 // dd($historiques)
     ?>
+     <style>
+   .card {
+            height: 100%;
+        }
+        .yellow-card {
+            background-color: #ffc107;
+            color: #000;
+        }
+        .red-card {
+            background-color: #dc3545;
+            color: #fff;
+        }
+   </style>
     <?php if(isset($historiques) && !empty($historiques) && $historiques!==null): ?>
     
-    <div class="row row-cols-1 row-cols-md-4 w-100 g-1">
+    <div class="row row-cols-1 row-cols-md-3 w-100 g-1">
         <?php $__currentLoopData = $historiques; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $keys=>$values): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
  
-        
+       
         <?php if(isset($values)&& isset($keys) && !empty($values)): ?>
         <?php $__currentLoopData = $values; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $sub_k=>$value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-        <?php echo e(dd($value[$sub_k])); ?>
-
-        
-      
-        <div class="col mx-auto d-flex flex-column flex-grouw-1 height-100">
-            <div class="card flex-grow-1 flex-column position-relative">
-                <div class="versus d-flex align-items-center justify-content-between">
+        <div class="col height-100">
+            <div class="card ">
+                <div class="card-header text-center">
                    
-                    <div class="round-1">
-                        <div class="round-2">
-                            <?php if(!empty($value['team1']['image'])): ?>
-                            <img class="img-fluid" src="<?php echo e(asset('assets/images/uploads/'.$value['team1']['image'])); ?>">
-                           <?php else: ?>
-                           <img class="img-fluid" src="<?php echo e(asset('assets/images/logo1.png')); ?>">
-                           <?php endif; ?>
-                        </div>  
+                    <p class="text-muted"><?php echo e($value['date']); ?></p>
+                    <div class="d-flex justify-content-center align-items-center">
+                        <?php if(!empty($value['team1']['image'])): ?>
+                        <div class="round-1">
+                            <div class="round-2">
+                        <img class="img-fluid" src="<?php echo e(asset('assets/images/uploads/'.$value['team1']['image'])); ?>">
+                    </div>  
                     </div>
-                    
-                    <div class="date&time d-flex flex-column justify-content-center align-items-center">
-                        <h6>
-                        <?php echo e($value['date']); ?></h6>
-                        <span>VS</span>
-                        <span class="score">
-                            <?php echo e($value['goals1']); ?>:<?php echo e($value['goals2']); ?>
-
-                        </span>
-                      </div> 
-                      <div class="round-1">
-                        <div class="round-2">
-                            <img class="img-fluid" src="<?php echo e(asset('assets/images/logo1.png')); ?>">
-                        </div>  
+                        <?php else: ?>
+                        <div class="round-1">
+                            <div class="round-2">
+                     
+                       <img class="img-fluid" src="<?php echo e(asset('assets/images/logo1.png')); ?>">
+                    </div>  
+                </div>
+                       <?php endif; ?>
+                        <span class="fs-4 fw-bold"><?php echo e($value['goals1']); ?></span>
+                        <span class="fs-4 fw-bold mx-2">-</span>
+                        <span class="fs-4 fw-bold"><?php echo e($value['goals2']); ?></span>
+                        <?php if(!empty($value['team2']['image'])): ?>
+                        <div class="round-1">
+                            <div class="round-2">
+                        <img class="img-fluid" src="<?php echo e(asset('assets/images/uploads/'.$value['team2']['image'])); ?>">
+                            </div>
+                        </div>
+                        <?php else: ?>
+                        <div class="round-1">
+                            <div class="round-2">
+                     
+                       <img class="img-fluid" src="<?php echo e(asset('assets/images/logo1.png')); ?>">
+                            </div >
+                        </div>
+                       <?php endif; ?>
                     </div>
                 </div>
-                <style>
-                     .player-list {
-            font-size: 8px; 
-            text-align: center;
-           
-        }
-        .player-item {
-            margin-right: 8px; 
-        }
-                </style>
-                <div class="buteurs d-flex justify-content-between align-items-center">
-                    <div class="d-flex flex-column">
-                        <?php if(isset($value['team1Events'])): ?>
-                        <?php $__currentLoopData = $value['team1Events']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $event1): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                        <?php if($event1['type']=='but'): ?>
-                        <span class="text-center text-success">Buts</span>
-                        <div class="player&score">
-                           
-                              <div class="player-list row g-1">
-                                <?php for($i=0;$i<$event1['buts'];$i++): ?>
-                                <div class="col-md-3 col-3 player-item ">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6">
+                            <h6 class="text-center">
+                                <?php echo e($value['team1']['nom']); ?>
+
+                            </h6>
+                            <ul class="list-unstyled">
+                                <?php if(isset($value['team1Events'])): ?>
+                                <?php $__currentLoopData = $value['team1Events']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $event1): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <?php if($event1['type']=='but' || $event1['type']=='jaune' || $event1['type']=='rouge'): ?>
+                                <li class="d-flex justify-content-between align-items-center">
                                     <?php echo e($event1['player']); ?>
 
-                                </div>
-                                <?php endfor; ?>
-                            
-                              </div> 
+                                    <span>
+                                        <?php if(isset($event1['buts'])): ?>
+                                        <span class="badge bg-secondary me-1">⚽<?php echo e($event1['buts']); ?></span>
+                                        <?php endif; ?>
+                                        <?php if(isset($event1['jaunes'])): ?>
+                                        <span class="badge yellow-card">▪<?php echo e($event1['jaunes']); ?></span>
+                                        <?php endif; ?>
+                                        <?php if(isset($event1['rouges'])): ?>
+                                        <span class="badge red-card">▪<?php echo e($event1['rouges']); ?></span>
+                                        <?php endif; ?>
+                                    </span>
+                                </li>
+                                <?php endif; ?>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                <?php endif; ?>
+                                
+                                
+                               
+                             
+                                
+                            </ul>
                         </div>
-                        <?php endif; ?>
-                        <?php if($event1['type']=='jaune'): ?>
-                        <span class="text-center text-warning">Cj</span>
-                        <div class="player&score">
-                           
-                              <div class="player-list row g-1">
-                                <?php for($i=0;$i<$event1['jaunes'];$i++): ?>
-                                <div class="col-md-3 col-3 player-item ">
-                                    <?php echo e($event1['player']); ?>
+                        <div class="col-6">
+                            <h6 class="text-center">
+                                <?php echo e($value['team2']['nom']); ?>
 
-                                </div>
-                                <?php endfor; ?>
-                            
-                              </div> 
-                        </div>
-                        <?php endif; ?>
-                        <?php if($event1['type']=='rouge'): ?>
-                        <span class="text-center text-danger">CR</span>
-                        <div class="player&score">
-                           
-                              <div class="player-list row g-1">
-                                <?php for($i=0;$i<$event1['rouges'];$i++): ?>
-                                <div class="col-md-3 col-3 player-item ">
-                                    <?php echo e($event1['player']); ?>
+                            </h6>
+                            <ul class="list-unstyled">
+                                <?php if(isset($value['team2Events'])): ?>
+                                <?php $__currentLoopData = $value['team2Events']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $event2): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <?php if($event2['type']=='but' || $event2['type']=='jaune' || $event2['type']=='rouge'): ?>
+                                <li class="d-flex justify-content-between align-items-center">
+                                    <?php echo e($event2['player']); ?>
 
-                                </div>
-                                <?php endfor; ?>
-                            
-                              </div> 
+                                    <span>
+                                        <?php if(isset($event2['buts'])): ?>
+                                        <span class="badge bg-secondary me-1">⚽<?php echo e($event2['buts']); ?></span>
+                                        <?php endif; ?>
+                                        <?php if(isset($event2['jaunes'])): ?>
+                                        <span class="badge yellow-card">▪<?php echo e($event2['jaunes']); ?></span>
+                                        <?php endif; ?>
+                                        <?php if(isset($event2['rouges'])): ?>
+                                        <span class="badge red-card">▪<?php echo e($event2['rouges']); ?></span>
+                                        <?php endif; ?>
+                                    </span>
+                                </li>
+                                <?php endif; ?>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                <?php endif; ?>
+                                
+                                
+                               
+                             
+                                
+                            </ul>
                         </div>
-                        <?php endif; ?>
-                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                        <?php endif; ?>
                     </div>
-                    <div class="d-flex flex-column">
-                        <?php if(isset($value['team2Events'])): ?>
-                        <?php $__currentLoopData = $value['team2Events']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $event2): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                        <?php if($event2['type']=='but'): ?>
-                        <span class="text-center text-success">Buts</span>
-                        <div class="player&score">
-                           
-                              <div class="player-list row g-1">
-                                <?php for($i=0;$i<$event2['buts'];$i++): ?>
-                                <div class="col-md-3 col-3 player-item">
-                                    <?php echo e($event2['player']); ?>
-
-                                </div>
-                                <?php endfor; ?>
-                              
-                              </div> 
-                        </div>
-                        <?php endif; ?>
-                        <?php if($event2['type']=='jaune'): ?>
-                        <span class="text-center text-warning">CJ</span>
-                        <div class="player&score">
-                           
-                              <div class="player-list row g-1">
-                                <?php for($i=0;$i<$event2['jaunes'];$i++): ?>
-                                <div class="col-md-3 col-3 player-item ">
-                                    <?php echo e($event2['player']); ?>
-
-                                </div>
-                                <?php endfor; ?>
-                            
-                              </div> 
-                        </div>
-                        <?php endif; ?>
-                        <?php if($event1['type']=='rouge'): ?>
-                        <span class="text-center text-danger">CR</span>
-                        <div class="player&score">
-                           
-                              <div class="player-list row g-1">
-                                <?php for($i=0;$i<$event2['rouges'];$i++): ?>
-                                <div class="col-md-3 col-3 player-item ">
-                                    <?php echo e($event2['player']); ?>
-
-                                </div>
-                                <?php endfor; ?>
-                            
-                              </div> 
-                        </div>
-                        <?php endif; ?>
-                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                        <?php endif; ?>
-                    </div>
-                </div>   
-               
+                </div>
             </div>
         </div>
-        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+      
+       
+       
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?> 
         <?php endif; ?>
         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         </div> 
         <?php endif; ?>
+      
     </div>
 </div>
 <?php $__env->stopSection(); ?>

@@ -39,7 +39,7 @@
             <div class="team-1">
                 <div class="team-name">
                   <div class="t-name"><?php echo e($match->team1->nom); ?></div>
-                  <div class="t-point"><?php echo e($match->team1->defaites*1 + $match->team1->victoires*3); ?> point(s)</div>
+                  <div class="t-point"><?php echo e($match->team1->nul*1 + $match->team1->victoires*3); ?> point(s)</div>
                 </div>
                 <div class="team-logo">
                   <div class="round-50-team">
@@ -80,7 +80,7 @@
                 </div>
                 <div class="team-name">
                   <div class="t-name"><?php echo e($match->team2->nom); ?></div>
-                  <div class="t-point"><?php echo e($match->team2->defaites*1 + $match->team2->victoires*3); ?> point(s)</div>
+                  <div class="t-point"><?php echo e($match->team2->nul*1 + $match->team2->victoires*3); ?> point(s)</div>
                 </div>
               </div>
               <?php endif; ?>
@@ -90,8 +90,8 @@
           <div class="titre d-flex justify-content-center align-items-center">
             <h5 class="text-pretty text-center">Historique des matchs</h5>
           </div>
-          
-          <?php if(isset($stats)): ?>
+         
+          <?php if(isset($stats) && !empty($stats)): ?>
           <div class="row row-cols-1 g-1 row-cols-md-3 ">
          <?php $__currentLoopData = $stats; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $match_p): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
          
@@ -101,7 +101,7 @@
                   <?php if($match_p['match']['id']===$match->id): ?>
                   <div class="match-mt live">Live</div>
                   <?php else: ?>
-                  <div class="match-mt live"><?php echo e($match_p['match']['date_heure']); ?></div>
+                  <div class="match-mt live"><?php echo e($match_p['match']['date_match']); ?></div>
 
                   <?php endif; ?>
                   <div class="teams d-flex">
