@@ -3,13 +3,13 @@
 
 namespace App\Repositories;
 
-use App\Models\player;
+use App\Models\Player;
 
 class PlayerRepository
 {
     protected $model;
 
-    public function __construct(player $player)
+    public function __construct(Player $player)
     {
         $this->model = $player;
     }
