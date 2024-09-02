@@ -14,9 +14,9 @@
           {{-- <div class="titre d-flex justify-content-center align-items-center">
             <h5 class="text-pretty text-center">Match en cours</h5>
           </div> --}}
-          {{dd($match)}}
+          {{-- {{dd($match)}} --}}
           @if(isset($match))
-          {{dd($match)}}
+          {{-- {{dd($match)}} --}}
           <div class="card mb-1 current-match-live">
             <div class="card-body team-a-vs-b 
             d-flex align-items-center justify-content-between position-relative z-1">
