@@ -274,7 +274,7 @@
               
           </div>
         </div>
-        @if(isset($matches))
+        @if(isset($matches) && isset($match) && !empty($match))
         <div class="col-md-3 colonne">
           @foreach($matches as $match_i)
           <div class="card mb-1">
@@ -300,7 +300,7 @@
               <div class="versus-time position-relative">
                 <div class="match-live">
                   <span class="timer">
-                    @if($match->id===$match_i->id)
+                    @if($match['id']==$match_i->id)
                     Live
                     @else
                     {{$match_i->date_match ?? 'Date à venir'}}
