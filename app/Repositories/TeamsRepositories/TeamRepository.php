@@ -54,10 +54,10 @@ class TeamRepository
     public function matchProche()
     {
         return TeamsVersus::whereNotNull('date_match')
-            ->where('date_match', '>=', Carbon::now())
-            ->orderBy('date_match', 'asc')
+            ->orderByRaw('ABS(TIMESTAMPDIFF(SECOND, date_match, NOW()))')
             ->first();
     }
+    
     public function matchOrga(){
         return TeamsVersus::whereNotNull('date_match')->orderBy('date_match', 'asc')->get();
     }

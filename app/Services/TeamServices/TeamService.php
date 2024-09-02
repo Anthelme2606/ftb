@@ -49,7 +49,8 @@ class TeamService
     return $this->teamRepository->matches();
 }
     public function matchProche(){
-        return $this->teamRepository->matchProche();}
+        return $this->teamRepository->matchProche();
+    }
         public function matchOrga(){
             return $this->teamRepository->matchOrga();}
     function minMatch($matches) {
