@@ -5,10 +5,9 @@
 @endsection
 @section('container')
 <div class="dashboard">
-<div class="content mt-1">
-    <div class="login-container position-relative ">
-          {{-- <div class="login-soccer  ">
-            </div> --}}
+<div class="content  d-flex justify-content-center align-items-center vh-100">
+    <div class="login-container position-relative  ">
+          
         <div class="login-header psotion-absolute">
           
             <div class="text-header d-flex flex-column">

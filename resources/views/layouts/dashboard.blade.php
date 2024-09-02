@@ -74,14 +74,14 @@
             <h5 class="text-pretty text-center">Historique des matchs</h5>
           </div>
          
-          @if(isset($stats) && !empty($stats))
+          @if(isset($stats) && !empty($stats) && isset($match) && !empty($match))
           <div class="row row-cols-1 g-1 row-cols-md-3 ">
          @foreach($stats as $match_p)
           @if(!empty($match_p['match']) && !empty($match_p['team1']) && !empty($match_p['team2']))
             <div class="col match-list px-1">
               <div class="card  match-li">
                 <div class="card-header d-flex flex-column">
-                  @if($match_p['match']['id']===$match->id)
+                  @if($match_p['match']['id']==$match['id'])
                   <div class="match-mt live">Live</div>
                   @else
                   <div class="match-mt live">{{$match_p['match']['date_match']}}</div>
