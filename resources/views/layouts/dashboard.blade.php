@@ -14,6 +14,7 @@
           {{-- <div class="titre d-flex justify-content-center align-items-center">
             <h5 class="text-pretty text-center">Match en cours</h5>
           </div> --}}
+          {{dd($match)}}
           @if(isset($match))
           {{dd($match)}}
           <div class="card mb-1 current-match-live">
